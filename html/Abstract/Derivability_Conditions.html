@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Theory Derivability_Conditions (Isabelle2020-RC3: March 2020)</title>
+<link media="all" rel="stylesheet" type="text/css" href="isabelle.css"/>
+</head>
+
+<body>
+<div class="head"><h1>Theory Derivability_Conditions</h1>
+
+<span class="command">theory</span> <span class="name">Derivability_Conditions</span><br/>
+<span class="keyword">imports</span> <a href="Abstract_Representability.html"><span class="name">Abstract_Representability</span></a><br/>
+
+</div>
+<div class="source">
+<pre class="source"><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* An abstract formulation and proof of the second incompleteness theorem, 
+which assumes the provability predicate &quot;prf&quot; and its weak representation P, 
+subject to Hilbert-Bernays-Loeb (HBL) conditions. 
+(It does not assumes any notion of &quot;proof of&quot; predicate and its representation.)
+Its proof is essentially performed in provability logic  *)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">theory</span></span><span> </span><span>Derivability_Conditions</span><span> </span><span class="keyword2"><span class="keyword">imports</span></span><span> </span><span>Abstract_Representability</span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">term</span></span><span> </span><span>WRepr_Provability</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* We assume all three derivability conditions: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Deriv_Cond</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>WRepr_Provability</span><span> 
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>  </span><span>enc</span><span> 
+</span><span>  </span><span>P</span><span>
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span>bprv</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>enc</span><span> </span><span class="delimiter">(</span><span class="string"><span class="delete"><span class="delete">&quot;&#10216;_&#10217;&quot;</span></span></span><span class="delimiter">)</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>P</span><span> 
+</span><span class="delimiter">+</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* The second and third Hilbert-Bernays-Loeb (HBL) derivability conditions: *)</span></span></span></span></span><span>
+</span><span>HBL2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8896;&#966; &#967;. &#966; &#8712; fmla &#10233; &#967; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; Fvars &#967; = {} &#10233; 
+  bprv (imp (cnj (PP &#10216;&#966;&#10217;) (PP &#10216;imp &#966; &#967;&#10217;)) 
+           (PP &#10216;&#967;&#10217;))&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span>HBL3</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8896;&#966;. &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; bprv (imp (PP &#10216;&#966;&#10217;) (PP &#10216;PP &#10216;&#966;&#10217;&#10217;))&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Recall what the HBL1 condition says: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>HBL1_PP</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; prv &#966; &#10233; bprv (PP &#10216;&#966;&#10217;)&quot;</span></span></span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>PP_def</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL1</span><span> </span><span class="keyword1"><span class="command">.</span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* The implicational form of HBL2 *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>HBL2_imp</span><span class="delimiter">:</span><span> 
+</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8896;&#966; &#967;. &#966; &#8712; fmla &#10233; &#967; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; Fvars &#967; = {} &#10233; 
+  bprv (imp (PP &#10216;imp &#966; &#967;&#10217;) (imp (PP &#10216;&#966;&#10217;) (PP &#10216;&#967;&#10217;)))&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL2</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>B.prv_cnj_imp</span><span> </span><span>B.prv_imp_com</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* ... and its weaker, detached version: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>HBL2_imp2</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#967; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#967; = {}&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PP &#10216;imp &#966; &#967;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (PP &#10216;&#966;&#10217;) (PP &#10216;&#967;&#10217;))&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>meson</span><span> </span><span>HBL2_imp</span><span> </span><span>PP</span><span> </span><span>enc</span><span> </span><span>imp</span><span> </span><span>num</span><span> </span><span>B.prv_imp_mp</span><span> </span><span>subsetCE</span><span class="delimiter">)</span><span> 
+</span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;Deriv_Cond&#8250;</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&lt;*)</span></span></span></span></span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&gt;*)</span></span></span></span></span><span>
+</span><span>
+</span><span>
+</span></pre>
+
+</div>
+</body>
+</html>

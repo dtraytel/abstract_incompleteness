@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Theory Abstract_Second_Godel (Isabelle2020-RC3: March 2020)</title>
+<link media="all" rel="stylesheet" type="text/css" href="isabelle.css"/>
+</head>
+
+<body>
+<div class="head"><h1>Theory Abstract_Second_Godel</h1>
+
+<span class="command">theory</span> <span class="name">Abstract_Second_Godel</span><br/>
+<span class="keyword">imports</span> <a href="Abstract_First_Godel.html"><span class="name">Abstract_First_Godel</span></a> <a href="Derivability_Conditions.html"><span class="name">Derivability_Conditions</span></a><br/>
+
+</div>
+<div class="source">
+<pre class="source"><span class="keyword1"><span class="command">theory</span></span><span> </span><span>Abstract_Second_Godel</span><span> </span><span class="keyword2"><span class="keyword">imports</span></span><span> </span><span>Abstract_First_Godel</span><span> </span><span>Derivability_Conditions</span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* We assume all three derivability conditions, and the Godel Formula: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Godel_Second_Assumptions</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>Deriv_Cond</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>  </span><span>enc</span><span>
+</span><span>  </span><span>P</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span>Godel_Form</span><span>  
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>num</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>  </span><span>enc</span><span>
+</span><span>  </span><span>S</span><span>
+</span><span>  </span><span>P</span><span>
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>enc</span><span> </span><span class="delimiter">(</span><span class="string"><span class="delete"><span class="delete">&quot;&#10216;_&#10217;&quot;</span></span></span><span class="delimiter">)</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>S</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>P</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>P_G</span><span class="delimiter">:</span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (PP &#10216;&#966;G&#10217;) (PP &#10216;fls&#10217;))&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span>0</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv (imp &#966;G (neg (PP &#10216;&#966;G&#10217;)))&quot;</span></span></span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>prv_&#966;G_eqv</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>prv_imp_eqvEL</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span>1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PP &#10216;imp &#966;G (neg (PP &#10216;&#966;G&#10217;))&#10217;)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL1_PP</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>0</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span>2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (PP &#10216;&#966;G&#10217;) (PP &#10216;neg (PP &#10216;&#966;G&#10217;)&#10217;))&quot;</span></span></span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL2_imp2</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span>  </span><span>_</span><span> </span><span>_</span><span> </span><span>1</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span>3</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (PP &#10216;&#966;G&#10217;) (PP &#10216;PP &#10216;&#966;G&#10217;&#10217;))&quot;</span></span></span><span> 
+</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL3</span><span class="delimiter">[</span><span>OF</span><span> </span><span>&#966;G</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span>23</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (PP &#10216;&#966;G&#10217;)
+                      (cnj (PP &#10216;PP &#10216;&#966;G&#10217;&#10217;) 
+                           (PP &#10216;neg (PP &#10216;&#966;G&#10217;)&#10217;)))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>B.prv_imp_cnj</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>3</span><span> </span><span>2</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span>4</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (cnj (PP &#10216;PP &#10216;&#966;G&#10217;&#10217;) 
+                          (PP &#10216;neg (PP &#10216;&#966;G&#10217;)&#10217;)) 
+                     (PP &#10216;fls&#10217;))&quot;</span></span></span><span> 
+</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL2</span><span class="delimiter">[</span><span>of</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;PP &#10216;&#966;G&#10217;&quot;</span></span></span><span> </span><span>fls</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>neg_def</span><span class="delimiter">[</span><span>symmetric</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">show</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>B.prv_prv_imp_trans</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>23</span><span> </span><span>4</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span> 
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* First the &quot;direct&quot;, positive formulation: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>godel_second_pos</span><span class="delimiter">:</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv (neg (PP &#10216;fls&#10217;))&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv fls&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">note</span></span><span> </span><span>PG</span><span> </span><span class="delimiter">=</span><span> </span><span>bprv_prv</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>P_G</span><span class="delimiter">,</span><span> </span><span>simplified</span><span class="delimiter">]</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv (neg (PP &#10216;&#966;G&#10217;))&quot;</span></span></span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>PG</span><span> </span><span>assms</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>neg_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>prv_prv_imp_trans</span><span class="delimiter">[</span><span>rotated</span><span> </span><span>3</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>auto</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv &#966;G&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>prv_&#966;G_eqv</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>prv_eqv_prv_rev</span><span class="delimiter">[</span><span>rotated</span><span> </span><span>2</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span> 
+</span><span>  </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* the only part of Godel&#39;s first theorem that is needed: *)</span></span></span></span></span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>godel_first_theEasyHalf_pos</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Then the more standard, counterpositive formulation: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">theorem</span></span><span> </span><span>godel_second</span><span class="delimiter">:</span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;consistent &#10233; &#172; prv (neg (PP &#10216;fls&#10217;))&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>godel_second_pos</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>consistent_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* 
+It is an immediate consequence of Godel II and HLB1 and HLB2 that 
+(assuming consistency) 
+prv (neg PP &#10216;&#966;&#10217;) holds for _no_ sentence, provable or not. 
+The theory is omniscient about what it can prove (thanks to HLB1), 
+but completely ignorant about what it cannot prove. 
+*)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">corollary</span></span><span> </span><span>not_prv_neg_PP</span><span class="delimiter">:</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>c</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;consistent&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#172; prv (neg (PP &#10216;&#966;&#10217;))&quot;</span></span></span><span>  
+</span><span class="keyword1"><span class="command">proof</span></span><span>
+</span><span>  </span><span class="keyword3"><span class="command">assume</span></span><span> </span><span>0</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv (neg (PP &#10216;&#966;&#10217;))&quot;</span></span></span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv (imp fls &#966;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PP &#10216;imp fls &#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>HBL1_PP</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (PP &#10216;fls&#10217;) (PP &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>HBL2_imp2</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (neg (PP &#10216;&#966;&#10217;)) (neg (PP &#10216;fls&#10217;)))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>B.prv_imp_neg_rev</span><span class="delimiter">)</span><span> </span><span>auto</span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">from</span></span><span> </span><span>prv_imp_mp</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>bprv_prv</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>this</span><span class="delimiter">,</span><span> </span><span>simplified</span><span class="delimiter">]</span><span> </span><span>0</span><span class="delimiter">,</span><span> </span><span>simplified</span><span class="delimiter">]</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv (neg (PP &#10216;fls&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">.</span></span><span> 
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span>False</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>godel_second</span><span class="delimiter">[</span><span>OF</span><span> </span><span>c</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span>
+</span><span>
+</span><span>  
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;Godel_Second_Assumptions&#8250;</span><span>
+</span><span> 
+</span><span class="keyword2"><span class="keyword">end</span></span><span> 
+</span><span>
+</span><span>
+</span><span>
+</span></pre>
+
+</div>
+</body>
+</html>

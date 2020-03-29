@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Theory Rosser_Formula (Isabelle2020-RC3: March 2020)</title>
+<link media="all" rel="stylesheet" type="text/css" href="isabelle.css"/>
+</head>
+
+<body>
+<div class="head"><h1>Theory Rosser_Formula</h1>
+
+<span class="command">theory</span> <span class="name">Rosser_Formula</span><br/>
+<span class="keyword">imports</span> <a href="Godel_Formula.html"><span class="name">Godel_Formula</span></a><br/>
+
+</div>
+<div class="source">
+<pre class="source"><span class="keyword1"><span class="command">section</span></span><span> </span><span class="cartouche"><span class="delete"><span class="delete">&#8249;Rosser Formula&#8250;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">text</span></span><span> </span><span class="cartouche"><span class="delete"><span class="delete">&#8249; The Rosser formula &#966;R is a modification of the Godel formula that
+is undecidable assuming consistency only (not &#969;consistency)&#8250;</span></span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&lt;*)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">theory</span></span><span> </span><span>Rosser_Formula</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">imports</span></span><span> </span><span>Diagonalization</span><span> </span><span>Godel_Formula</span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>  
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&gt;*)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Rosser_Form</span><span> </span><span class="delimiter">=</span><span>  
+</span><span>Deduct2_with_PseudoOrder</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>  
+</span><span>  </span><span>Lq</span><span>
+</span><span>  </span><span class="delimiter">+</span><span>
+</span><span>Repr_Neg</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span> 
+</span><span>  </span><span>enc</span><span> 
+</span><span>  </span><span>N</span><span>
+</span><span>  </span><span class="delimiter">+</span><span>
+</span><span>Repr_Subst</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>  </span><span>enc</span><span>
+</span><span>  </span><span>S</span><span> 
+</span><span>  </span><span class="delimiter">+</span><span>
+</span><span>WRepr_Provability</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>  </span><span>enc</span><span>
+</span><span>  </span><span>P</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>    </span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Lq</span><span> 
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span>  
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>enc</span><span> </span><span class="delimiter">(</span><span class="string"><span class="delete"><span class="delete">&quot;&#10216;_&#10217;&quot;</span></span></span><span class="delimiter">)</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>N</span><span> </span><span>S</span><span> </span><span>P</span><span> 
+</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Rosser_Form_with_Proofs</span><span> </span><span class="delimiter">=</span><span>  
+</span><span>Deduct2_with_PseudoOrder</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>  
+</span><span>  </span><span>Lq</span><span>
+</span><span>  </span><span class="delimiter">+</span><span>
+</span><span>Repr_Neg</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span> 
+</span><span>  </span><span>enc</span><span> 
+</span><span>  </span><span>N</span><span>
+</span><span>  </span><span class="delimiter">+</span><span>
+</span><span>Repr_Subst</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>  </span><span>enc</span><span>
+</span><span>  </span><span>S</span><span> 
+</span><span>  </span><span class="delimiter">+</span><span>
+</span><span>Repr_Proofs</span><span> 
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>  </span><span>enc</span><span>
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span>prfOf</span><span>  
+</span><span>  </span><span>encPf</span><span> 
+</span><span>  </span><span>Pf</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>    </span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Lq</span><span> 
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;proof set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prfOf</span><span>  
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>enc</span><span> </span><span class="delimiter">(</span><span class="string"><span class="delete"><span class="delete">&quot;&#10216;_&#10217;&quot;</span></span></span><span class="delimiter">)</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>N</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>S</span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>encPf</span><span> </span><span>Pf</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Rosser_Form_with_Proofs</span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>R</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;R = all zz (imp (LLq (Var zz) (Var yy))
+                                     (all xx&#39; (imp (NN (Var xx) (Var xx&#39;)) 
+                                                   (neg (PPf (Var zz) (Var xx&#39;))))))&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>RR</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;RR t1 t2 = psubst R [(t1,yy), (t2,xx)]&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>R</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;R &#8712; fmla&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>R_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>RR_def2</span><span class="delimiter">:</span><span>   
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;t1 &#8712; trm &#10233; t2 &#8712; trm &#10233; xx &#8713; FvarsT t1 &#10233; RR t1 t2 = subst (subst R t1 yy) t2 xx&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>RR_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>psubst_eq_rawpsubst2</span><span class="delimiter">[</span><span>simplified</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>P&#39;</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;P&#39; = exi yy (cnj (PPf (Var yy) (Var xx)) (RR (Var yy) (Var xx)))&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>PP&#39;</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;PP&#39; t = subst P&#39; t xx&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>Fvars_R</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars R = {xx,yy}&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>R_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars (RR (Var yy) (Var xx)) = {yy,xx}&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>RR_def2</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>P&#39;</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;P&#39; &#8712; fmla&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>P&#39;_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>PPf_def2</span><span> </span><span>RR_def2</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>Fvars_P&#39;</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars P&#39; = {xx}&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>P&#39;_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>PPf_def2</span><span> </span><span>RR_def2</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>PP&#39;</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;t &#8712; trm &#10233; PP&#39; t &#8712; fmla&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>PP&#39;_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>RR</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;t1 &#8712; trm &#10233; t2 &#8712; trm &#10233; RR t1 t2 &#8712; fmla&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>RR_def</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>RR_simps</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>   </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num &#10233; subst (RR (Var yy) (Var xx)) n xx = RR (Var yy) n&quot;</span></span></span><span>
+</span><span>   </span><span class="string"><span class="delete"><span class="delete">&quot;m &#8712; num &#10233; n &#8712; num &#10233; subst (RR (Var yy) m) n yy = RR n m&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>RR_def2</span><span> </span><span>subst2_fresh_switch</span><span class="delimiter">)</span><span class="delimiter">+</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">text</span></span><span> </span><span class="cartouche"><span class="delete"><span class="delete">&#8249; The Rosser modification of the Godel formula &#8250;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>&#966;R</span><span> </span><span class="delimiter">::</span><span> </span><span class="tfree">&#39;fmla</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966;R &#8801; diag (neg P&#39;)&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>&#966;R</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966;R &#8712; fmla&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Fvars_&#966;R</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966;R = {}&quot;</span></span></span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>&#966;R_def</span><span> </span><span>wrepr.PP_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>bprv_&#966;R_eqv</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (eqv &#966;R (neg (PP&#39; &#10216;&#966;R&#10217;)))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>&#966;R_def</span><span> </span><span>PP&#39;_def</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>bprv_diag_eqv</span><span class="delimiter">[</span><span>of</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;neg P&#39;&quot;</span></span></span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>bprv_imp_&#966;R</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (neg (PP&#39; &#10216;&#966;R&#10217;)) &#966;R)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>B.prv_imp_eqvER</span><span class="delimiter">)</span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">:</span><span> </span><span>bprv_&#966;R_eqv</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prv_&#966;R_eqv</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;prv (eqv &#966;R (neg (PP&#39; &#10216;&#966;R&#10217;)))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>dwf_dwfd.d_dwf.bprv_prv&#39;</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>bprv_&#966;R_eqv</span><span class="delimiter">,</span><span> </span><span>simplified</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">.</span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prv_imp_&#966;R</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;prv (imp (neg (PP&#39; &#10216;&#966;R&#10217;)) &#966;R)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>prv_imp_eqvER</span><span class="delimiter">)</span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">:</span><span> </span><span>prv_&#966;R_eqv</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Rosser_Form&#8250;</span><span>
+</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Rosser_Form_with_Proofs</span><span> </span><span class="delimiter">&lt;</span><span> </span><span>Rosser_Form</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>P</span><span> </span><span class="delimiter">=</span><span> </span><span>P</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>standard</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Rosser_Form_with_Proofs</span><span> </span><span class="delimiter">&lt;</span><span> </span><span>Godel_Form</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>P</span><span> </span><span class="delimiter">=</span><span> </span><span>P</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>standard</span><span>
+</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&lt;*)</span></span></span></span></span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&gt;*)</span></span></span></span></span></pre>
+
+</div>
+</body>
+</html>

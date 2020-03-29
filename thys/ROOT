@@ -1,0 +1,36 @@
+chapter Incompleteness
+
+session Abstract (Incompleteness) = HOL +
+  description {* The Abstract Incompleteness Theorems *}
+  options [browser_info, timeout = 2400]
+  theories
+    Abstract_First_Godel
+    Abstract_Second_Godel
+    All_Abstract
+
+session HF_Sets_Semantic_First_and_Second (Incompleteness) in HF_Sets_Semantic_First_and_Second = Abstract +
+  description {* Reproduction of Paulson's Formalization of Incompleteness Theorems *}
+  options [browser_info, timeout = 2400]
+  sessions
+    Incompleteness
+  theories
+    HF_Instance_Weak
+
+session HF_Sets_Semanticless_Second (Incompleteness) in HF_Sets_Semanticless_Second = Abstract +
+  description {* Upgrade of Paulson's Formalization of Second Incompleteness Theorem *}
+  options [browser_info, timeout = 2400]
+  sessions
+    HereditarilyFinite
+    Nominal2
+  theories
+    HF_Instance
+
+session Robinson_Arith (Incompleteness) in Robinson_Arith = Abstract +
+  description {* Robinson's Arithmetic *}
+  options [browser_info, timeout = 2400]
+  sessions
+    HereditarilyFinite
+    Nominal2
+  theories
+    Q_Instance_Sound
+    Q_Instance_Theory

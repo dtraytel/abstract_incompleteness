@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Theory Standard_Model (Isabelle2020-RC3: March 2020)</title>
+<link media="all" rel="stylesheet" type="text/css" href="isabelle.css"/>
+</head>
+
+<body>
+<div class="head"><h1>Theory Standard_Model</h1>
+
+<span class="command">theory</span> <span class="name">Standard_Model</span><br/>
+<span class="keyword">imports</span> <a href="Abstract_Representability.html"><span class="name">Abstract_Representability</span></a><br/>
+
+</div>
+<div class="source">
+<pre class="source"><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Abstract notion of standard model and truth  *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">theory</span></span><span> </span><span>Standard_Model</span><span> </span><span class="keyword2"><span class="keyword">imports</span></span><span> </span><span>Abstract_Representability</span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span> 
+</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Truth in a standard model *)</span></span></span></span></span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* First some minimal assumptions, involving only imp and all: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Minimal_Truth</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>Syntax_with_Numerals_and_Connectives_False_Disj</span><span> 
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>  
+</span><span class="delimiter">+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* The notion of truth for sentences: *)</span></span></span></span></span><span>
+</span><span class="keyword2"><span class="keyword">fixes</span></span><span> </span><span>isTrue</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla &#8658; bool&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span>   
+</span><span>not_isTrue_fls</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#172; isTrue fls&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span>isTrue_imp</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896;&#966; &#968;. &#966; &#8712; fmla &#10233; &#968; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; Fvars &#968; = {} &#10233; 
+  isTrue &#966; &#10233; isTrue (imp &#966; &#968;) &#10233; isTrue &#968;&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span>
+</span><span>isTrue_all</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896;x &#966;. x &#8712; var &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {x} &#10233; 
+  (&#8704; n &#8712; num. isTrue (subst &#966; n x)) &#10233; isTrue (all x &#966;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span>isTrue_exi</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896;x &#966;. x &#8712; var &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {x} &#10233; 
+  isTrue (exi x &#966;) &#10233; (&#8707; n &#8712; num. isTrue (subst &#966; n x))&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span>isTrue_neg</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896;&#966;. &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; 
+  isTrue &#966; &#8744; isTrue (neg &#966;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_neg_excl</span><span class="delimiter">:</span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233;   
+ isTrue &#966; &#10233; isTrue (neg &#966;) &#10233; False&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_imp</span><span> </span><span>not_isTrue_fls</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>neg_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_neg_neg</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (neg (neg &#966;))&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue &#966;&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span>isTrue_neg</span><span> </span><span>isTrue_neg_excl</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>fastforce</span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context  Minimal_Truth&#8250;</span><span>
+</span><span>
+</span><span>  
+</span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Minimal_Truth_Soundness</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>Minimal_Truth</span><span> 
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>isTrue</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span>B</span><span> </span><span class="delimiter">:</span><span> </span><span>Deduct_with_False_Disj</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>bprv</span><span> 
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>bprv</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>isTrue</span><span> 
+</span><span class="delimiter">+</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* We assume soundness of the provability for sentences (w.r.t. truth): *)</span></span></span></span></span><span>
+</span><span>prv_sound_isTrue</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896;&#966;. &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; 
+  bprv &#966; &#10233; isTrue &#966;&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* For sound theories, consistency is a fact rather than a hypothesis *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>B_consistent</span><span class="delimiter">:</span><span> </span><span>B.consistent</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>B.consistent_def</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>not_isTrue_fls</span><span> </span><span>prv_sound_isTrue</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prv_neg_excl</span><span class="delimiter">:</span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; 
+  bprv &#966; &#10233; bprv (neg &#966;) &#10233; False&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_neg_excl</span><span class="delimiter">[</span><span>of</span><span> </span><span>&#966;</span><span class="delimiter">]</span><span> </span><span>prv_sound_isTrue</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prv_imp_implies_isTrue</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#967; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#967; = {}&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>p</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp &#966; &#967;)&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>i</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue &#966;&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue &#967;&quot;</span></span></span><span> 
+</span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (imp &#966; &#967;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>p</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>prv_sound_isTrue</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span>isTrue_imp</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Sound theories are not only consistent, but also &#969;consistent 
+(in the strong, intuitionistic sense): *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>B_&#969;consistent</span><span class="delimiter">:</span><span> </span><span>B.&#969;consistent</span><span> 
+</span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>B.&#969;consistent_def</span><span> </span><span class="keyword1"><span class="command">proof</span></span><span> </span><span class="delimiter">(</span><span>safe</span><span> </span><span>del</span><span class="delimiter">:</span><span> </span><span>notI</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">fix</span></span><span> </span><span>&#966;</span><span> </span><span>x</span><span> </span><span class="keyword3"><span class="command">assume</span></span><span> </span><span>0</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;x &#8712; var&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {x}&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>00</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8704;n&#8712;num. bprv (neg (subst &#966; n x))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8704;n&#8712;num. isTrue (neg (subst &#966; n x))&quot;</span></span></span><span> 
+</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>00</span><span> </span><span>1</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">!</span><span class="delimiter">:</span><span> </span><span>prv_sound_isTrue</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>Fvars_subst</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (all x (neg &#966;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;1&quot;</span></span></span><span> </span><span>isTrue_all</span><span class="delimiter">)</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">moreover</span></span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">{</span></span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (all x (neg &#966;)) (neg (exi x &#966;)))&quot;</span></span></span><span>  
+</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>B.prv_all_neg_imp_neg_exi</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
+</span><span>   </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (imp (all x (neg &#966;)) (neg (exi x &#966;)))&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;1&quot;</span></span></span><span> </span><span>prv_sound_isTrue</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">}</span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">ultimately</span></span><span> </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (neg (exi x &#966;))&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>metis</span><span> </span><span>0</span><span> </span><span>1</span><span> </span><span>Diff_insert_absorb</span><span> </span><span>Fvars_all</span><span> </span><span>Fvars_exi</span><span> </span><span>Fvars_neg</span><span> </span><span>all</span><span>
+</span><span>      </span><span>exi</span><span> </span><span>insert_absorb</span><span> </span><span>insert_not_empty</span><span> </span><span>isTrue_imp</span><span> </span><span>neg</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#172; isTrue (neg (neg (exi x &#966;)))&quot;</span></span></span><span>  
+</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>1</span><span> </span><span>isTrue_neg_excl</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>force</span><span> 
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#172; bprv (neg (neg (exi x &#966;)))&quot;</span></span></span><span>  
+</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;1&quot;</span></span></span><span> </span><span>prv_sound_isTrue</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span> 
+</span><span class="keyword1"><span class="command">qed</span></span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>B_&#969;consistentStd1</span><span class="delimiter">:</span><span> </span><span>B.&#969;consistentStd1</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>B_&#969;consistent</span><span> </span><span>B.&#969;consistent_impliesStd1</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>B_&#969;consistentStd2</span><span class="delimiter">:</span><span> </span><span>B.&#969;consistentStd2</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>B_&#969;consistent</span><span> </span><span>B.&#969;consistent_impliesStd2</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> 
+</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Minimal_Truth_Soundness_Proof_Repr</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>Repr_Proofs</span><span> 
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span>  </span><span>enc</span><span>
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span>prfOf</span><span>  
+</span><span>  </span><span>encPf</span><span> 
+</span><span>  </span><span>Pf</span><span>
+</span><span class="delimiter">+</span><span> 
+</span><span>Minimal_Truth_Soundness</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>bprv</span><span>
+</span><span>  </span><span>isTrue</span><span>
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span>bprv</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>isTrue</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>enc</span><span> </span><span class="delimiter">(</span><span class="string"><span class="delete"><span class="delete">&quot;&#10216;_&#10217;&quot;</span></span></span><span class="delimiter">)</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;proof set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prfOf</span><span>   
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>encPf</span><span> </span><span>Pf</span><span> 
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* lemmas not_prv_not_prv_PPf = consistent_not_prv_not_prv_PPf[OF consistent] *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemmas</span></span><span> </span><span>prfOf_iff_PPf</span><span> </span><span class="delimiter">=</span><span> </span><span>B_consistent_prfOf_iff_PPf</span><span class="delimiter">[</span><span>OF</span><span> </span><span>B_consistent</span><span class="delimiter">]</span><span>
+</span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* The provability predicate is decided by prv on encodings 
+(just like with any predicate that &quot;represents&quot;)   *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_prv_PPf_prf_or_neg</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;prf &#8712; proof &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; 
+    bprv (PPf (encPf prf) &#10216;&#966;&#10217;) &#8744; bprv (neg (PPf (encPf prf) &#10216;&#966;&#10217;))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>not_prfOf_PPf</span><span> </span><span>prfOf_PPf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Hence that predicate is complete w.r.t. truth  *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_implies_prv_PPf_prf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;prf &#8712; proof &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; 
+   isTrue (PPf (encPf prf) &#10216;&#966;&#10217;) &#10233; bprv (PPf (encPf prf) &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>metis</span><span> </span><span>FvarsT_num</span><span> </span><span>Fvars_PPf</span><span> </span><span>Fvars_fls</span><span> </span><span>PPf</span><span> 
+</span><span>Un_empty</span><span> </span><span>empty_iff</span><span> </span><span>enc</span><span> </span><span>encPf</span><span> </span><span>fls</span><span> </span><span>in_num</span><span> </span><span>isTrue_prv_PPf_prf_or_neg</span><span> 
+</span><span>neg_def</span><span> </span><span>not_isTrue_fls</span><span> </span><span>prv_imp_implies_isTrue</span><span class="delimiter">)</span><span> 
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* ... and thanks to cleanness we can replace encoded proofs 
+with arbitrary numerals in the completeness property:  *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_implies_prv_PPf</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>iT</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> 
+</span><span class="keyword1"><span class="command">proof</span></span><span class="delimiter">(</span><span>cases</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; encPf ` proof&quot;</span></span></span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">case</span></span><span> </span><span>True</span><span>  
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span>  
+</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>iT</span><span> </span><span>isTrue_implies_prv_PPf_prf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>  
+</span><span class="keyword1"><span class="command">next</span></span><span>
+</span><span>  </span><span class="keyword3"><span class="command">case</span></span><span> </span><span>False</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (neg (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>PPf_encPf</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (neg (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>prv_sound_isTrue</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span>False</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>iT</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>isTrue_neg_excl</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* In fact, by soundness we even have an iff: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_iff_prv_PPf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; n &#966;. n &#8712; num &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; isTrue (PPf n &#10216;&#966;&#10217;) &#10231; bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_implies_prv_PPf</span><span>  
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>exists_no_Fvars</span><span> </span><span>not_isTrue_fls</span><span> </span><span>prv_sound_isTrue</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*  Truth of the provability representation implies provability: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_PP_implies_prv</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>&#966;</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>iPP</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (wrepr.PP &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv &#966;&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (exi yy (PPf (Var yy) &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>iPP</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>PP_PPf</span><span class="delimiter">[</span><span>OF</span><span> </span><span>&#966;</span><span class="delimiter">(</span><span>1</span><span class="delimiter">)</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">.</span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">from</span></span><span> </span><span>isTrue_exi</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>this</span><span class="delimiter">]</span><span> 
+</span><span>  </span><span class="keyword3"><span class="command">obtain</span></span><span> </span><span>n</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>n</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span>pP</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_implies_prv_PPf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#172; bprv (neg (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>prv_neg_excl</span><span class="delimiter">[</span><span>of</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;PPf n &#10216;&#966;&#10217;&quot;</span></span></span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">then</span></span><span> </span><span class="keyword3"><span class="command">obtain</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prf&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prf&quot;</span></span></span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prf &#8712; proof&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>nn</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n = encPf prf&quot;</span></span></span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span>n</span><span> </span><span>PPf_encPf</span><span> </span><span>&#966;</span><span class="delimiter">(</span><span>1</span><span class="delimiter">)</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prfOf prf &#966;&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>pP</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>nn</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>prfOf_iff_PPf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>prv_prfOf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span> 
+</span><span class="keyword1"><span class="command">qed</span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* The reverse HBL1 (now without the &#969;consistencyStd assumption which holds here 
+thanks to our truth-in-standard-model assumption) *)</span></span></span></span></span><span>
+</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemmas</span></span><span> </span><span>HBL1_rev</span><span> </span><span class="delimiter">=</span><span> </span><span>&#969;consistentStd1_HBL1_rev</span><span class="delimiter">[</span><span>OF</span><span> </span><span>B_&#969;consistentStd1</span><span class="delimiter">]</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Note: Would also follow by soundness from isTrue_PP_implies_prv *)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;Minimal_Truth_Soundness_Proof_Repr&#8250;</span><span>
+</span><span>
+</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Next: Proof recovery from HBL1_iff *)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Minimal_Truth_Soundness_HBL1iff_Compl_Pf</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>WRepr_Provability</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span> 
+</span><span>  </span><span>enc</span><span> 
+</span><span>  </span><span>P</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span>Minimal_Truth_Soundness</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>bprv</span><span>
+</span><span>  </span><span>isTrue</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span>Deduct_with_False_Disj</span><span>  
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>prv</span><span>
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>enc</span><span> </span><span class="delimiter">(</span><span class="string"><span class="delete"><span class="delete">&quot;&#10216;_&#10217;&quot;</span></span></span><span class="delimiter">)</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span>bprv</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>P</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>isTrue</span><span>
+</span><span class="delimiter">+</span><span> 
+</span><span class="keyword2"><span class="keyword">fixes</span></span><span> </span><span>Pf</span><span> </span><span class="delimiter">::</span><span> </span><span class="tfree">&#39;fmla</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Pf is a formula with free variables xx yy  *)</span></span></span></span></span><span>
+</span><span>Pf</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Pf &#8712; fmla&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span>Fvars_Pf</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars Pf = {yy,xx}&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* P relates to Pf internally just like a prv and a proofOf would 
+relate: via an existential *)</span></span></span></span></span><span>
+</span><span>P_Pf</span><span class="delimiter">:</span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233;
+ let PPf = (&#955; t1 t2. psubst Pf [(t1,yy), (t2,xx)]) in 
+ bprv (eqv (subst P &#10216;&#966;&#10217; xx) (exi yy (PPf (Var yy) &#10216;&#966;&#10217;)))&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* We assume both HBL1 and HBL1_rev, i.e., an iff version: *)</span></span></span></span></span><span>
+</span><span>HBL1_iff</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; &#966;. &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; bprv (PP &#10216;&#966;&#10217;) &#10231; prv &#966;&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span>Compl_Pf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; n &#966;. n &#8712; num &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; 
+ let PPf = (&#955; t1 t2. psubst Pf [(t1,yy), (t2,xx)]) in 
+ isTrue (PPf n &#10216;&#966;&#10217;) &#10230; bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>  
+</span><span>  
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>PPf</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;PPf &#8801; &#955; t1 t2. psubst Pf [(t1,yy), (t2,xx)]&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>PP_deff</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;PP t = subst P t xx&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>PP_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>PP_PPf_eqv</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; bprv (eqv (PP &#10216;&#966;&#10217;) (exi yy (PPf (Var yy) &#10216;&#966;&#10217;)))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>PP_deff</span><span> </span><span>PPf_def</span><span> </span><span>P_Pf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*  *)</span></span></span></span></span><span>
+</span><span> 
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>PPf</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;t1 &#8712; trm &#10233; t2 &#8712; trm &#10233; xx &#8713; FvarsT t1 &#10233; PPf t1 t2 &#8712; fmla&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>PPf_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>PPf_def2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;t1 &#8712; trm &#10233; t2 &#8712; trm &#10233; xx &#8713; FvarsT t1 &#10233; 
+  PPf t1 t2 = subst (subst Pf t1 yy) t2 xx&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>PPf_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>psubst_eq_rawpsubst2</span><span class="delimiter">[</span><span>simplified</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>Fvars_PPf</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;t1 &#8712; trm &#10233; t2 &#8712; trm &#10233; xx &#8713; FvarsT t1 &#10233; 
+ Fvars (PPf t1 t2) = FvarsT t1 &#8746; FvarsT t2&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>PPf_def2</span><span> </span><span>Fvars_subst</span><span> </span><span>subst2_fresh_switch</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num &#10233; subst (PPf (Var yy) (Var xx)) n xx = PPf (Var yy) n&quot;</span></span></span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;m &#8712; num &#10233; n &#8712; num &#10233; subst (PPf (Var yy) m) n yy = PPf n m&quot;</span></span></span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num &#10233; subst (PPf (Var yy) (Var xx)) n yy = PPf n (Var xx)&quot;</span></span></span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;m &#8712; num &#10233; n &#8712; num &#10233; subst (PPf m (Var xx)) n xx = PPf m n&quot;</span></span></span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;m &#8712; num &#10233; subst (PPf (Var zz) (Var xx&#39;)) m zz = PPf m (Var xx&#39;)&quot;</span></span></span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;m &#8712; num &#10233; n &#8712; num &#10233; subst (PPf m (Var xx&#39;)) n xx&#39; = PPf m n&quot;</span></span></span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num &#10233; subst (PPf (Var zz) (Var xx&#39;)) n xx&#39; = PPf (Var zz) n&quot;</span></span></span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;m &#8712; num &#10233; n &#8712; num &#10233; subst (PPf (Var zz) n) m zz = PPf m n&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>PPf_def2</span><span> </span><span>Fvars_subst</span><span> </span><span>subst2_fresh_switch</span><span class="delimiter">)</span><span> 
+</span><span>    
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* *)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>PP_PPf</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PP &#10216;&#966;&#10217;) &#10231; bprv (exi yy (PPf (Var yy) &#10216;&#966;&#10217;))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span>PP_PPf_eqv</span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">]</span><span> </span><span>B.prv_eqv_sym</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>PP_PPf_eqv</span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">]</span><span class="delimiter">]</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>safe</span><span> </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span class="delimiter">(</span><span>rule</span><span> </span><span>B.prv_eqv_prv</span><span class="delimiter">[</span><span>of</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;PP &#10216;&#966;&#10217;&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;exi yy (PPf (Var yy) &#10216;&#966;&#10217;)&quot;</span></span></span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>simp_all</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span class="delimiter">(</span><span>rule</span><span> </span><span>B.prv_eqv_prv</span><span class="delimiter">[</span><span>of</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;exi yy (PPf (Var yy) &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;PP &#10216;&#966;&#10217;&quot;</span></span></span><span> </span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_implies_prv_PPf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; n &#966;. n &#8712; num &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233;  
+ isTrue (PPf n &#10216;&#966;&#10217;) &#10233; bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>Compl_Pf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>PPf_def</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_iff_prv_PPf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; n &#966;. n &#8712; num &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; isTrue (PPf n &#10216;&#966;&#10217;) &#10231; bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_implies_prv_PPf</span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>exists_no_Fvars</span><span> </span><span>not_isTrue_fls</span><span> </span><span>prv_sound_isTrue</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*  *)</span></span></span></span></span><span>
+</span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Preparing to instantiate this alternative into the mainstream locale hierarchy: 
+We define the &quot;missing&quot; proofs to be numerals, we encode them as the identity, 
+and we &quot;copy&quot; prfOf from the corresponding predicate one-level-up, PPf.
+*)</span></span></span></span></span><span> 
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof = num&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>prfOf</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm &#8658; &#39;fmla &#8658; bool&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span>   
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;prfOf n &#966; &#8801; bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span>  
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>encPf</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm &#8658; &#39;trm&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;encPf &#8801; id&quot;</span></span></span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*  *)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prv_exi_PPf_iff_isTrue</span><span class="delimiter">:</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span>  
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (exi yy (PPf (Var yy) &#10216;&#966;&#10217;)) &#10231; isTrue (exi yy (PPf (Var yy) &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="delimiter">(</span><span class="keyword2"><span class="keyword">is</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;?L &#10231; ?R&quot;</span></span></span><span class="delimiter">)</span><span>
+</span><span class="keyword1"><span class="command">proof</span></span><span>
+</span><span>  </span><span class="keyword3"><span class="command">assume</span></span><span> </span><span class="var">?L</span><span> </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?R</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>prv_sound_isTrue</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span class="keyword1"><span class="command">next</span></span><span>
+</span><span>  </span><span class="keyword3"><span class="command">assume</span></span><span> </span><span class="var">?R</span><span> 
+</span><span>  </span><span class="keyword3"><span class="command">obtain</span></span><span> </span><span>n</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>n</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>i</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_exi</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span class="alt_string"><span class="delete"><span class="delete">`?R`</span></span></span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>isTrue_iff_prv_PPf</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?L</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>B.prv_exiI</span><span class="delimiter">[</span><span>of</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>n</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_exi_iff</span><span class="delimiter">:</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span>  
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (exi yy (PPf (Var yy) &#10216;&#966;&#10217;)) &#10231; (&#8707;n&#8712;num. isTrue (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="delimiter">(</span><span class="keyword2"><span class="keyword">is</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;?L &#10231; ?R&quot;</span></span></span><span class="delimiter">)</span><span>
+</span><span class="keyword1"><span class="command">proof</span></span><span>
+</span><span>  </span><span class="keyword3"><span class="command">assume</span></span><span> </span><span class="var">?L</span><span> </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?R</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_exi</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span class="alt_string"><span class="delete"><span class="delete">`?L`</span></span></span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span class="keyword1"><span class="command">next</span></span><span>
+</span><span>  </span><span class="keyword3"><span class="command">assume</span></span><span> </span><span class="var">?R</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">then</span></span><span> </span><span class="keyword3"><span class="command">obtain</span></span><span> </span><span>n</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>n</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>i</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>isTrue_iff_prv_PPf</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (exi yy (PPf (Var yy) &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>B.prv_exiI</span><span class="delimiter">[</span><span>of</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>n</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?L</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>prv_sound_isTrue</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prv_prfOf</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span>  
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv &#966; &#10231; (&#8707;n&#8712;num. prfOf n &#966;)&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv &#966; &#10231; bprv (PP &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL1_iff</span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">also</span></span><span> </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8230; &#10231; bprv (exi yy (PPf (Var yy) &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>PP_PPf</span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">..</span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">also</span></span><span> </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8230; &#10231; isTrue (exi yy (PPf (Var yy) &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>prv_exi_PPf_iff_isTrue</span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">.</span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">also</span></span><span> </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8230; &#10231; (&#8707;n&#8712;num. isTrue (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_exi_iff</span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">.</span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">also</span></span><span> </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8230; &#10231; (&#8707;n&#8712;num. bprv (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_iff_prv_PPf</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>assms</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">also</span></span><span> </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8230; &#10231; (&#8707;n&#8712;num. prfOf n &#966;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>prfOf_def</span><span> </span><span class="keyword1"><span class="command">..</span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">finally</span></span><span> </span><span class="keyword3"><span class="command">show</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">.</span></span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prfOf_prv_Pf</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prfOf n &#966;&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (psubst Pf [(n, yy), (&#10216;&#966;&#10217;, xx)])&quot;</span></span></span><span> 
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>prfOf_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>PPf_def2</span><span> </span><span>psubst_eq_rawpsubst2</span><span class="delimiter">)</span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_exi_iff_PP</span><span class="delimiter">:</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span>  
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (PP &#10216;&#966;&#10217;) &#10231; (&#8707;n&#8712;num. isTrue (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span>  
+</span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (eqv (PP &#10216;&#966;&#10217;) (exi yy (PPf (Var yy) &#10216;&#966;&#10217;)))&quot;</span></span></span><span> 
+</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>PP_PPf_eqv</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (PP &#10216;&#966;&#10217;) (exi yy (PPf (Var yy) &#10216;&#966;&#10217;)))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (imp (exi yy (PPf (Var yy) &#10216;&#966;&#10217;)) (PP &#10216;&#966;&#10217;))&quot;</span></span></span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp_all</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>B.prv_imp_eqvEL</span><span> </span><span>B.prv_imp_eqvER</span><span class="delimiter">)</span><span>   
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>isTrue_exi_iff</span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">,</span><span> </span><span>symmetric</span><span class="delimiter">]</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>safe</span><span> </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span class="delimiter">(</span><span>rule</span><span> </span><span>prv_imp_implies_isTrue</span><span class="delimiter">)</span><span> </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>simp_all</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span class="delimiter">(</span><span>rule</span><span> </span><span>prv_imp_implies_isTrue</span><span class="delimiter">)</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp_all</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Minimal_Truth_Soundness_HBL1iff_Compl_Pf&#8250;</span><span>
+</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>Minimal_Truth_Soundness_HBL1iff_Compl_Pf</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span>    
+</span><span>Compl_NegPf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; n &#966;. n &#8712; num &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; 
+ let PPf = (&#955; t1 t2. psubst Pf [(t1,yy), (t2,xx)]) in 
+ isTrue (neg (PPf n &#10216;&#966;&#10217;)) &#10230; bprv (neg (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_implies_prv_neg_PPf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; n &#966;. n &#8712; num &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233;  
+ isTrue (neg (PPf n &#10216;&#966;&#10217;)) &#10233; bprv (neg (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>Compl_NegPf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>PPf_def</span><span class="delimiter">)</span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>isTrue_iff_prv_neg_PPf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; n &#966;. n &#8712; num &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; isTrue (neg (PPf n &#10216;&#966;&#10217;)) &#10231; bprv (neg (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_implies_prv_neg_PPf</span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>exists_no_Fvars</span><span> </span><span>not_isTrue_fls</span><span> </span><span>prv_sound_isTrue</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prv_PPf_decide</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>np</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#172; bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (neg (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#172; isTrue (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>isTrue_iff_prv_PPf</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (neg (PPf n &#10216;&#966;&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>isTrue_neg</span><span class="delimiter">[</span><span>of</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;PPf n &#10216;&#966;&#10217;&quot;</span></span></span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>isTrue_iff_prv_neg_PPf</span><span class="delimiter">)</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>not_prfOf_prv_neg_Pf</span><span class="delimiter">:</span><span> 
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>n&#966;</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#172; prfOf n &#966;&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (neg (psubst Pf [(n, yy), (&#10216;&#966;&#10217;, xx)]))&quot;</span></span></span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span>prv_PPf_decide</span><span class="delimiter">[</span><span>OF</span><span> </span><span>n&#966;</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>prfOf_def</span><span>  </span><span>PPf_def2</span><span> </span><span>psubst_eq_rawpsubst2</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf&#8250;</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf</span><span> </span><span class="delimiter">&lt;</span><span> 
+</span><span>   </span><span>repr</span><span class="delimiter">:</span><span> </span><span>Repr_Proofs</span><span>  
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* added label to avoid duplicated constant P, which is assumed 
+in Minimal_Truth_Soundness_HBL1iff_Compl_Pf but defined in Repr_Proofs  
+(they are of course extensionally equal).
+*)</span></span></span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="delimiter">=</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prfOf</span><span> </span><span class="delimiter">=</span><span> </span><span>prfOf</span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>encPf</span><span> </span><span class="delimiter">=</span><span> </span><span>encPf</span><span>  
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>standard</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>bprv_prv</span><span> </span><span>prv_prfOf</span><span> </span><span>prfOf_prv_Pf</span><span> </span><span>not_prfOf_prv_neg_Pf</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">done</span></span></span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Lemma 6 (&quot;proof recovery&quot;) from the JAR paper: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf</span><span> </span><span class="delimiter">&lt;</span><span> 
+</span><span>  </span><span>min_truth</span><span class="delimiter">:</span><span> </span><span>Minimal_Truth_Soundness_Proof_Repr</span><span>
+</span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="delimiter">=</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prfOf</span><span> </span><span class="delimiter">=</span><span> </span><span>prfOf</span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>encPf</span><span> </span><span class="delimiter">=</span><span> </span><span>encPf</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>standard</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">done</span></span></span></span><span>
+</span><span>
+</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* FOR THE CLASSICAL REASONING VERSION *)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>WRepr_Provability</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>prv</span><span> </span><span>bprv</span><span> 
+</span><span>  </span><span>enc</span><span> 
+</span><span>  </span><span>P</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span>Minimal_Truth_Soundness</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>bprv</span><span>
+</span><span>  </span><span>isTrue</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span>Deduct_with_False_Disj</span><span>  
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>prv</span><span>
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>enc</span><span> </span><span class="delimiter">(</span><span class="string"><span class="delete"><span class="delete">&quot;&#10216;_&#10217;&quot;</span></span></span><span class="delimiter">)</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span>bprv</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>P</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>isTrue</span><span>
+</span><span class="delimiter">+</span><span> 
+</span><span class="keyword2"><span class="keyword">fixes</span></span><span> </span><span>Pf</span><span> </span><span class="delimiter">::</span><span> </span><span class="tfree">&#39;fmla</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Pf is a formula with free variables xx yy  *)</span></span></span></span></span><span>
+</span><span>Pf</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Pf &#8712; fmla&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span>Fvars_Pf</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars Pf = {yy,xx}&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* P relates to Pf internally just like a prv and a proofOf would 
+relate: via an existential *)</span></span></span></span></span><span>
+</span><span>P_Pf</span><span class="delimiter">:</span><span>
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233;
+ let PPf = (&#955; t1 t2. psubst Pf [(t1,yy), (t2,xx)]) in 
+ bprv (eqv (subst P &#10216;&#966;&#10217; xx) (exi yy (PPf (Var yy) &#10216;&#966;&#10217;)))&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span> 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* We assume, in addition to HBL1, the strong form of HBL1_rev: *)</span></span></span></span></span><span>
+</span><span>HBL1_rev_prv</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; &#966;. &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; prv (PP &#10216;&#966;&#10217;) &#10233; prv &#966;&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> 
+</span><span>Compl_Pf</span><span class="delimiter">:</span><span> 
+</span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; n &#966;. n &#8712; num &#10233; &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; 
+ let PPf = (&#955; t1 t2. psubst Pf [(t1,yy), (t2,xx)]) in 
+ isTrue (PPf n &#10216;&#966;&#10217;) &#10230; bprv (PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span> 
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>HBL1_rev</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>f</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fv</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>bp</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PP &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv &#966;&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">!</span><span class="delimiter">:</span><span> </span><span>HBL1_rev_prv</span><span> </span><span>bprv_prv</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>bp</span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>HBL1_iff</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; bprv (PP &#10216;&#966;&#10217;) &#10231; prv &#966;&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL1</span><span> </span><span>HBL1_rev</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>PP_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>HBL1_iff_prv</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; prv (PP &#10216;&#966;&#10217;) &#10231; prv &#966;&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>safe</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL1_rev_prv</span><span> </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>simp</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>bprv_prv</span><span> </span><span>HBL1_PP</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span> 
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* context Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf *)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf</span><span> </span><span class="delimiter">&lt;</span><span> 
+</span><span>mts_prv_mts</span><span class="delimiter">:</span><span> </span><span>Minimal_Truth_Soundness_HBL1iff_Compl_Pf</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>Pf</span><span> </span><span class="delimiter">=</span><span> </span><span>Pf</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>standard</span><span>  
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>P_Pf</span><span> </span><span>HBL1_rev</span><span> </span><span>HBL1_PP</span><span> </span><span>Compl_Pf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf_Classical</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span class="keyword2"><span class="keyword">assumes</span></span><span>   
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*NB: we don&#39;t really need to assume classical reasoning (double negation) all throughout, 
+but only for the provability predicate: *)</span></span></span></span></span><span>
+</span><span>classical_P</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; &#966;. &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; let PP = (&#955;t. subst P t xx) in 
+  prv (neg (neg (PP &#10216;&#966;&#10217;))) &#10233; prv (PP &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>classical_PP</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; prv (neg (neg (PP &#10216;&#966;&#10217;))) &#10233; prv (PP &#10216;&#966;&#10217;)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>classical_P</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>PP_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Variant_Classic&#8250;</span><span>
+</span><span>
+</span><span>
+</span><span>
+</span><span>  
+</span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> 
+</span></pre>
+
+</div>
+</body>
+</html>

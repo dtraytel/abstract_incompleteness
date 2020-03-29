@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Theory Prelim (Isabelle2020-RC3: March 2020)</title>
+<link media="all" rel="stylesheet" type="text/css" href="isabelle.css"/>
+</head>
+
+<body>
+<div class="head"><h1>Theory Prelim</h1>
+
+<span class="command">theory</span> <span class="name">Prelim</span><br/>
+<span class="keyword">imports</span> <a href="../../HOL/HOL/Main.html"><span class="name">Main</span></a><br/>
+
+</div>
+<div class="source">
+<pre class="source"><span class="keyword1"><span class="command">section</span></span><span> </span><span class="cartouche"><span class="delete"><span class="delete">&#8249;Preliminaries&#8250;</span></span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&lt;*)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">theory</span></span><span> </span><span>Prelim</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">imports</span></span><span> </span><span>Main</span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&gt;*)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">abbreviation</span></span><span> </span><span class="delimiter">(</span><span>input</span><span class="delimiter">)</span><span> </span><span>any</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;any &#8801; undefined&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">fun</span></span><span> </span><span>first</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;nat &#8658; nat list&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;first 0 = []&quot;</span></span></span><span>
+</span><span class="delimiter">|</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;first (Suc n) = n # first n&quot;</span></span></span><span>
+</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">text</span></span><span> </span><span class="cartouche"><span class="delete"><span class="delete">&#8249;Some facts about zipping lists&#8250;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>fst_set_zip_map_fst</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;length xs = length ys &#10233; fst ` (set (zip (map fst xs) ys)) = fst ` (set xs)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>induct</span><span> </span><span>xs</span><span> </span><span>ys</span><span> </span><span>rule</span><span class="delimiter">:</span><span> </span><span>list_induct2</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>snd_set_zip_map_snd</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;length xs = length ys &#10233; snd ` (set (zip xs (map snd ys))) = snd ` (set ys)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>induct</span><span> </span><span>xs</span><span> </span><span>ys</span><span> </span><span>rule</span><span class="delimiter">:</span><span> </span><span>list_induct2</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>snd_set_zip</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;length xs = length ys &#10233; snd ` (set (zip xs ys)) = set ys&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>induct</span><span> </span><span>xs</span><span> </span><span>ys</span><span> </span><span>rule</span><span class="delimiter">:</span><span> </span><span>list_induct2</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>set_zip_D</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(x, y) &#8712; set (zip xs ys) &#10233; x &#8712; set xs &#8743; y &#8712; set ys&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>set_zip_leftD</span><span> </span><span>set_zip_rightD</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>inj_on_set_zip_map</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>i</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;inj_on f X&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>a</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(f x1, y1) &#8712; set (zip (map f xs) ys)&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;set xs &#8838; X&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;x1 &#8712; X&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;length xs = length ys&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(x1, y1) &#8712; set (zip xs ys)&quot;</span></span></span><span> 
+</span><span class="keyword1"><span class="command">using</span></span><span> </span><span>a</span><span> </span><span class="keyword1"><span class="command">proof</span></span><span> </span><span class="delimiter">(</span><span>induct</span><span> </span><span>xs</span><span> </span><span>arbitrary</span><span class="delimiter">:</span><span> </span><span>ys</span><span> </span><span>x1</span><span> </span><span>y1</span><span class="delimiter">)</span><span> 
+</span><span>  </span><span class="keyword3"><span class="command">case</span></span><span> </span><span class="delimiter">(</span><span>Cons</span><span> </span><span>x</span><span> </span><span>xs</span><span> </span><span>yys</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?case</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>i</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>inj_on_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>cases</span><span> </span><span>yys</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span class="keyword1"><span class="command">qed</span></span><span> </span><span class="delimiter">(</span><span>insert</span><span> </span><span>i</span><span class="delimiter">,</span><span> </span><span>auto</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>set_zip_map_fst_snd</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(u,x) &#8712; set (zip us (map snd txs))&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(t,u) &#8712; set (zip (map fst txs) us)&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;distinct (map snd txs)&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;distinct us&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;length us = length txs&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(t, x) &#8712; set txs&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span class="delimiter">(</span><span>5</span><span class="delimiter">,</span><span>1</span><span>-</span><span>4</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>induct</span><span> </span><span>us</span><span> </span><span>txs</span><span> </span><span>arbitrary</span><span class="delimiter">:</span><span> </span><span>u</span><span> </span><span>x</span><span> </span><span>t</span><span> </span><span>rule</span><span class="delimiter">:</span><span> </span><span>list_induct2</span><span class="delimiter">)</span><span>
+</span><span>    </span><span class="delimiter">(</span><span>auto</span><span> </span><span>dest</span><span class="delimiter">:</span><span> </span><span>set_zip_leftD</span><span> </span><span>set_zip_rightD</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>set_zip_map_fst_snd2</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(u, x) &#8712; set (zip us (map snd txs))&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(t, x) &#8712; set txs&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;distinct (map snd txs)&quot;</span></span></span><span>
+</span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;distinct us&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;length us = length txs&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(t, u) &#8712; set (zip (map fst txs) us)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span class="delimiter">(</span><span>5</span><span class="delimiter">,</span><span>1</span><span>-</span><span>4</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>induct</span><span> </span><span>us</span><span> </span><span>txs</span><span> </span><span>arbitrary</span><span class="delimiter">:</span><span> </span><span>u</span><span> </span><span>x</span><span> </span><span>t</span><span> </span><span>rule</span><span class="delimiter">:</span><span> </span><span>list_induct2</span><span class="delimiter">)</span><span>
+</span><span>    </span><span class="delimiter">(</span><span>auto</span><span> </span><span>dest</span><span class="delimiter">:</span><span> </span><span>set_zip_rightD</span><span> </span><span>simp</span><span class="delimiter">:</span><span> </span><span>image_iff</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>set_zip_length_map</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(x1, y1) &#8712; set (zip xs ys)&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;length xs = length ys&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(f x1, y1) &#8712; set (zip (map f xs) ys)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span class="delimiter">(</span><span>2</span><span class="delimiter">,</span><span>1</span><span class="delimiter">)</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>induct</span><span> </span><span>xs</span><span> </span><span>ys</span><span> </span><span>arbitrary</span><span class="delimiter">:</span><span> </span><span>x1</span><span> </span><span>y1</span><span> </span><span>rule</span><span class="delimiter">:</span><span> </span><span>list_induct2</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>asList</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;a set &#8658; &#39;a list&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;asList A &#8801; SOME as. set as = A&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>asList</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">,</span><span>intro</span><span class="delimiter">!</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;finite A &#10233; set (asList A) = A&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>asList_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>meson</span><span> </span><span>finite_list</span><span> </span><span>tfl_some</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>triv_Un_imp_aux</span><span class="delimiter">:</span><span> 
+</span><span>  </span><span class="string"><span class="delete"><span class="delete">&quot;(&#8896;a. &#966; &#10233; a &#8713; A &#10233; a &#8712; B &#10231; a &#8712; C) &#10233; &#966; &#10230; A &#8746; B = A &#8746; C&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>toN</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;toN n &#8801; [0..&lt;(Suc n)]&quot;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>set_toN</span><span class="delimiter">[</span><span>simp</span><span class="delimiter">]</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;set (toN n) = {0..n}&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>toN_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">declare</span></span><span> </span><span>list.map_cong</span><span class="delimiter">[</span><span>cong</span><span class="delimiter">]</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">ML</span></span><span> </span><span class="cartouche"><span class="delete"><span class="delete">&#8249;
+exception TAC of term
+
+val simped = Thm.rule_attribute [] (fn context =&gt; fn thm =&gt;
+  let
+    val ctxt = Context.proof_of context;
+    val (thm&#39;, ctxt&#39;) = yield_singleton (apfst snd oo Variable.import false) thm ctxt;
+    val full_goal = Thm.prop_of thm&#39;;
+    val goal = Goal.prove ctxt&#39; [] [] full_goal (fn {context = ctxt, prems = _} =&gt;
+      HEADGOAL (asm_full_simp_tac ctxt THEN&#39; TRY o SUBGOAL (fn (goal, _) =&gt; raise (TAC goal))))
+      |&gt; K (HOLogic.mk_Trueprop @{term True})
+      handle TAC goal =&gt; goal;
+    val thm = Goal.prove ctxt&#39; [] [] goal (fn {context = ctxt, prems = _} =&gt;
+      HEADGOAL (Method.insert_tac ctxt [thm&#39;] THEN&#39; asm_full_simp_tac ctxt))
+      |&gt; singleton (Variable.export ctxt&#39; ctxt);
+  in thm end)
+
+val _ = Theory.setup
+  (Attrib.setup \&lt;^binding&gt;&#8249;simped&#8250; (pair simped) &quot;simped rule&quot;);
+&#8250;</span></span></span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&lt;*)</span></span></span></span></span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*&gt;*)</span></span></span></span></span><span>
+</span><span>
+</span></pre>
+
+</div>
+</body>
+</html>

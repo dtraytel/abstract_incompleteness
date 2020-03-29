@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Theory Quotient_Product (Isabelle2020-RC3: March 2020)</title>
+<link media="all" rel="stylesheet" type="text/css" href="isabelle.css"/>
+</head>
+
+<body>
+<div class="head"><h1>Theory Quotient_Product</h1>
+
+<span class="command">theory</span> <span class="name">Quotient_Product</span><br/>
+<span class="keyword">imports</span> <a href="Quotient_Syntax.html"><span class="name">Quotient_Syntax</span></a><br/>
+
+</div>
+<div class="source">
+<pre class="source"><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*  Title:      HOL/Library/Quotient_Product.thy
+    Author:     Cezary Kaliszyk and Christian Urban
+*)</span></span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">section</span></span><span> </span><span class="cartouche"><span class="delete"><span class="delete">&#8249;Quotient infrastructure for the product type&#8250;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">theory</span></span><span> </span><span>Quotient_Product</span><span>
+</span><span class="keyword2"><span class="keyword">imports</span></span><span> </span><span>Quotient_Syntax</span><span>
+</span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">subsection</span></span><span> </span><span class="cartouche"><span class="delete"><span class="delete">&#8249;Rules for the Quotient package&#8250;</span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>map_prod_id</span><span> </span><span class="delimiter">[</span><span>id_simps</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;map_prod id id = id&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>fun_eq_iff</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>rel_prod_eq</span><span> </span><span class="delimiter">[</span><span>id_simps</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;rel_prod (=) (=) = (=)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>fun_eq_iff</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prod_equivp</span><span> </span><span class="delimiter">[</span><span>quot_equiv</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;equivp R1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;equivp R2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;equivp (rel_prod R1 R2)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">!</span><span class="delimiter">:</span><span> </span><span>equivpI</span><span> </span><span>reflpI</span><span> </span><span>sympI</span><span> </span><span>transpI</span><span> </span><span>elim</span><span class="delimiter">!</span><span class="delimiter">:</span><span> </span><span>equivpE</span><span> </span><span>elim</span><span class="delimiter">:</span><span> </span><span>reflpE</span><span> </span><span>sympE</span><span> </span><span>transpE</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>prod_quotient</span><span> </span><span class="delimiter">[</span><span>quot_thm</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 Abs1 Rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 Abs2 Rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 (rel_prod R1 R2) (map_prod Abs1 Abs2) (map_prod Rep1 Rep2)&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>Quotient3I</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>map_prod.compositionality</span><span> </span><span>comp_def</span><span> </span><span>map_prod.identity</span><span>
+</span><span>     </span><span>Quotient3_abs_rep</span><span> </span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">(</span><span>1</span><span class="delimiter">)</span><span class="delimiter">]</span><span> </span><span>Quotient3_abs_rep</span><span> </span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">(</span><span>2</span><span class="delimiter">)</span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>split_paired_all</span><span> </span><span>Quotient3_rel_rep</span><span> </span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">(</span><span>1</span><span class="delimiter">)</span><span class="delimiter">]</span><span> </span><span>Quotient3_rel_rep</span><span> </span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">(</span><span>2</span><span class="delimiter">)</span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>Quotient3_rel</span><span> </span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">(</span><span>1</span><span class="delimiter">)</span><span class="delimiter">]</span><span> </span><span>Quotient3_rel</span><span> </span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">(</span><span>2</span><span class="delimiter">)</span><span class="delimiter">]</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>split_paired_all</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">done</span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">declare</span></span><span> </span><span class="delimiter">[</span><span class="delimiter">[</span><span>mapQ3</span><span> </span><span>prod</span><span> </span><span class="delimiter">=</span><span> </span><span class="delimiter">(</span><span>rel_prod</span><span class="delimiter">,</span><span> </span><span>prod_quotient</span><span class="delimiter">)</span><span class="delimiter">]</span><span class="delimiter">]</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>Pair_rsp</span><span> </span><span class="delimiter">[</span><span>quot_respect</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 Abs1 Rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 Abs2 Rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(R1 ===&gt; R2 ===&gt; rel_prod R1 R2) Pair Pair&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>Pair_transfer</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>Pair_prs</span><span> </span><span class="delimiter">[</span><span>quot_preserve</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 Abs1 Rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 Abs2 Rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(Rep1 ---&gt; Rep2 ---&gt; (map_prod Abs1 Abs2)) Pair = Pair&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>fun_eq_iff</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>Quotient3_abs_rep</span><span class="delimiter">[</span><span>OF</span><span> </span><span>q1</span><span class="delimiter">]</span><span> </span><span>Quotient3_abs_rep</span><span class="delimiter">[</span><span>OF</span><span> </span><span>q2</span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">done</span></span></span></span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>fst_rsp</span><span> </span><span class="delimiter">[</span><span>quot_respect</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 Abs1 Rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 Abs2 Rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(rel_prod R1 R2 ===&gt; R1) fst fst&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>fst_prs</span><span> </span><span class="delimiter">[</span><span>quot_preserve</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 Abs1 Rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 Abs2 Rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(map_prod Rep1 Rep2 ---&gt; Abs1) fst = fst&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>fun_eq_iff</span><span> </span><span>Quotient3_abs_rep</span><span class="delimiter">[</span><span>OF</span><span> </span><span>q1</span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>snd_rsp</span><span> </span><span class="delimiter">[</span><span>quot_respect</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 Abs1 Rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 Abs2 Rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(rel_prod R1 R2 ===&gt; R2) snd snd&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>snd_prs</span><span> </span><span class="delimiter">[</span><span>quot_preserve</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 Abs1 Rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 Abs2 Rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(map_prod Rep1 Rep2 ---&gt; Abs2) snd = snd&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>fun_eq_iff</span><span> </span><span>Quotient3_abs_rep</span><span class="delimiter">[</span><span>OF</span><span> </span><span>q2</span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>case_prod_rsp</span><span> </span><span class="delimiter">[</span><span>quot_respect</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;((R1 ===&gt; R2 ===&gt; (=)) ===&gt; (rel_prod R1 R2) ===&gt; (=)) case_prod case_prod&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>case_prod_transfer</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>split_prs</span><span> </span><span class="delimiter">[</span><span>quot_preserve</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 Abs1 Rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">and</span></span><span>     </span><span>q2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 Abs2 Rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;(((Abs1 ---&gt; Abs2 ---&gt; id) ---&gt; map_prod Rep1 Rep2 ---&gt; id) case_prod) = case_prod&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>fun_eq_iff</span><span> </span><span>Quotient3_abs_rep</span><span class="delimiter">[</span><span>OF</span><span> </span><span>q1</span><span class="delimiter">]</span><span> </span><span>Quotient3_abs_rep</span><span class="delimiter">[</span><span>OF</span><span> </span><span>q2</span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span class="delimiter">[</span><span>quot_respect</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;((R2 ===&gt; R2 ===&gt; (=)) ===&gt; (R1 ===&gt; R1 ===&gt; (=)) ===&gt;
+  rel_prod R2 R1 ===&gt; rel_prod R2 R1 ===&gt; (=)) rel_prod rel_prod&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>prod.rel_transfer</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span class="delimiter">[</span><span>quot_preserve</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>q1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R1 abs1 rep1&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">and</span></span><span>     </span><span>q2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Quotient3 R2 abs2 rep2&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;((abs1 ---&gt; abs1 ---&gt; id) ---&gt; (abs2 ---&gt; abs2 ---&gt; id) ---&gt;
+  map_prod rep1 rep2 ---&gt; map_prod rep1 rep2 ---&gt; id) rel_prod = rel_prod&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>fun_eq_iff</span><span> </span><span>Quotient3_abs_rep</span><span class="delimiter">[</span><span>OF</span><span> </span><span>q1</span><span class="delimiter">]</span><span> </span><span>Quotient3_abs_rep</span><span class="delimiter">[</span><span>OF</span><span> </span><span>q2</span><span class="delimiter">]</span><span class="delimiter">)</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span class="delimiter">[</span><span>quot_preserve</span><span class="delimiter">]</span><span class="delimiter">:</span><span>
+</span><span>  </span><span class="keyword2"><span class="keyword">shows</span></span><span class="string"><span class="delete"><span class="delete">&quot;(rel_prod ((rep1 ---&gt; rep1 ---&gt; id) R1) ((rep2 ---&gt; rep2 ---&gt; id) R2)
+  (l1, l2) (r1, r2)) = (R1 (rep1 l1) (rep1 r1) &#8743; R2 (rep2 l2) (rep2 r2))&quot;</span></span></span><span>
+</span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
+</span><span>
+</span><span class="keyword1"><span class="command">declare</span></span><span> </span><span>prod.inject</span><span class="delimiter">[</span><span>quot_preserve</span><span class="delimiter">]</span><span>
+</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span>
+</span></pre>
+
+</div>
+</body>
+</html>
