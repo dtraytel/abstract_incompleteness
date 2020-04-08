@@ -2,7 +2,7 @@ theory Abstract_First_Godel_Rosser
   imports Rosser_Formula Standard_Model
 begin 
 
-context Rosser_Form_with_Proofs
+context Rosser_Form_Proofs
 begin
 
 lemma NN_neg_unique_xx':
@@ -41,14 +41,14 @@ proof
   hence 1: "prv (all zz (imp (LLq (Var zz) (encPf prf)) (neg (PPf (Var zz) \<langle>neg \<phi>R\<rangle>))))"
     (* here use locale assumption about the order-like relation: *)   
     by (intro LLq_num) auto  
-  have 11: "prv (RR (encPf prf) \<langle>\<phi>R\<rangle>)" apply(simp add: RR_def2 R_def)  
-    apply(rule prv_all_congW[OF _ _ _ _ 1]) apply(auto intro!: prv_imp_monoL)
+  have 11: "prv (RR (encPf prf) \<langle>\<phi>R\<rangle>)"
     using NN_imp_xx'[of \<phi>R "neg (PPf (Var zz) (Var xx'))", simplified] 
-    apply - apply(rule dwf_dwfd.d_dwf.bprv_prv') by auto
+    by (auto simp add: RR_def2 R_def
+      intro!: prv_all_congW[OF _ _ _ _ 1] prv_imp_monoL[OF _ _ _ dwf_dwfd.d_dwf.bprv_prv'])
   have 3: "prv (cnj (PPf (encPf prf) \<langle>\<phi>R\<rangle>) (RR (encPf prf) \<langle>\<phi>R\<rangle>))" 
-     apply(rule prv_cnjI[OF _ _ b00 11]) by auto 
-  have "prv ((PP' \<langle>\<phi>R\<rangle>))" unfolding PP'_def P'_def apply simp
-    apply(rule prv_exiI[of _ _ "encPf prf"]) using 3 by auto
+    by (rule prv_cnjI[OF _ _ b00 11]) auto 
+  have "prv ((PP' \<langle>\<phi>R\<rangle>))" unfolding PP'_def P'_def
+     using 3 by (auto intro: prv_exiI[of _ _ "encPf prf"])
   moreover have "prv (neg (PP' \<langle>\<phi>R\<rangle>))" 
     using prv_eqv_prv[OF _ _ 0 prv_\<phi>R_eqv] by auto
   ultimately show False using c unfolding consistent_def3 by auto
@@ -90,21 +90,19 @@ proof
     }
     thus "prv (imp (sdsj {eql (Var yy) r |r. r \<in> P}) 
               (imp (cnj (PPf (Var yy) \<langle>\<phi>R\<rangle>) (RR (Var yy) \<langle>\<phi>R\<rangle>)) fls))"
-      apply (intro prv_sdsj_imp) apply auto using Var P(1) eql by (simp add: set_rev_mp)
+       using Var P(1) eql by (intro prv_sdsj_imp) (auto 0 0 simp: set_rev_mp)
   next 
     let ?\<phi> = "all xx' (imp (NN \<langle>\<phi>R\<rangle> (Var xx')) (neg (PPf p (Var xx'))))" 
-    have "bprv (neg ?\<phi>)" apply(rule B.prv_imp_neg_allWI[where t = "\<langle>neg \<phi>R\<rangle>"])
-      using 1 11 by (auto intro: B.prv_prv_neg_imp_neg)  
+    have "bprv (neg ?\<phi>)"
+      using 1 11 by (intro B.prv_imp_neg_allWI[where t = "\<langle>neg \<phi>R\<rangle>"]) (auto intro: B.prv_prv_neg_imp_neg)  
     hence "prv (neg ?\<phi>)" by (auto intro: dwf_dwfd.d_dwf.bprv_prv')
     hence 00: "prv (imp (LLq p (Var yy))
                        (imp (imp (LLq p (Var yy)) ?\<phi>) fls))" 
       unfolding neg_def[symmetric] by (intro prv_imp_neg_imp_neg_imp) auto      
     have "prv (imp (LLq p (Var yy)) 
               (imp (RR (Var yy) \<langle>\<phi>R\<rangle>) fls))" 
-      unfolding neg_def[symmetric]
-      apply(simp add: RR_def2 R_def)
-      apply(intro prv_imp_neg_allI[where t = p]) 
-      using 00 by (auto simp: neg_def)
+      unfolding neg_def[symmetric] using 00[folded neg_def]
+      by (auto simp add: RR_def2 R_def intro!: prv_imp_neg_allI[where t = p])
     thus "prv (imp (LLq p (Var yy)) 
               (imp (cnj (PPf (Var yy) \<langle>\<phi>R\<rangle>) (RR (Var yy) \<langle>\<phi>R\<rangle>)) fls))"
       unfolding neg_def[symmetric] by (intro prv_imp_neg_imp_cnjR) auto
@@ -137,8 +135,8 @@ is proved very similarly to that of the Godel setnece \<phi>R *)
 
 
 
-locale Rosser_Form_with_Proofs_and_Minimal_Truth = 
-Rosser_Form_with_Proofs
+locale Rosser_Form_Proofs_Minimal_Truth = 
+Rosser_Form_Proofs
   var trm fmla Var FvarsT substT Fvars subst
   num
   eql cnj imp all exi 
@@ -174,6 +172,69 @@ and N S P
 and "proof" :: "'proof set" and prfOf encPf 
 and Pf
 and isTrue 
+begin  
+
+lemma Fvars_PP'[simp]: "Fvars (PP' \<langle>\<phi>R\<rangle>) = {}" unfolding PP'_def 
+  by (subst Fvars_subst) auto
+
+lemma Fvars_RR'[simp]: "Fvars (RR (Var yy) \<langle>\<phi>R\<rangle>) = {yy}" 
+  unfolding RR_def
+  by (subst Fvars_psubst) (fastforce intro!: exI[of _ "{yy}"])+
+
+lemma isTrue_PPf_implies_\<phi>R: 
+assumes "isTrue (all yy (neg (PPf (Var yy) \<langle>\<phi>R\<rangle>)))"
+(is "isTrue ?H")
+shows "isTrue \<phi>R" 
+proof-  
+  define F where "F \<equiv> RR (Var yy) \<langle>\<phi>R\<rangle>"
+  have [simp]: "F \<in> fmla" "Fvars F = {yy}" 
+    unfolding F_def by auto
+  have [simp]: "exi yy (PPf (Var yy) \<langle>\<phi>R\<rangle>) \<in> fmla" 
+    unfolding PPf_def by auto
+
+  have 1: "bprv
+     (imp (all yy (neg (PPf (Var yy) \<langle>\<phi>R\<rangle>)))
+       (neg (exi yy (PPf (Var yy) \<langle>\<phi>R\<rangle>))))"
+  (is "bprv (imp (all yy (neg ?G)) (neg (exi yy ?G)))")
+    using B.prv_all_neg_imp_neg_exi[of yy ?G] by auto
+  have 2: "bprv (imp (neg (exi yy ?G)) (neg (exi yy (cnj ?G F))))" 
+    by (auto intro!: B.prv_imp_neg_rev B.prv_exi_cong B.prv_imp_cnjL)
+  have "bprv (imp (all yy (neg ?G)) (neg (exi yy (cnj ?G F))))" 
+    using B.prv_prv_imp_trans[OF _ _ _  1 2] by simp
+  hence "bprv (imp ?H (neg (PP' \<langle>\<phi>R\<rangle>)))"
+    unfolding PP'_def P'_def 
+    by (simp add: F_def) 
+  from B.prv_prv_imp_trans[OF _ _ _  this bprv_imp_\<phi>R]
+  have "bprv (imp ?H \<phi>R)" by auto   
+  from prv_imp_implies_isTrue[OF _ _ _ _ this assms, simplified]
+  show ?thesis . 
+qed
+     
+theorem isTrue_\<phi>R:
+  assumes "consistent"
+  shows "isTrue \<phi>R" 
+proof-   
+  have "\<forall> n \<in> num. bprv (neg (PPf n \<langle>\<phi>R\<rangle>))" 
+    using not_prv_prv_neg_PPf[OF _ _ godel_rosser_first_theEasyHalf[OF assms]]
+    by auto
+  hence "\<forall> n \<in> num. isTrue (neg (PPf n \<langle>\<phi>R\<rangle>))" by (auto intro: bprv_sound_isTrue) 
+  hence "isTrue (all yy (neg (PPf (Var yy) \<langle>\<phi>R\<rangle>)))" by (auto intro: isTrue_all)
+  thus ?thesis using isTrue_PPf_implies_\<phi>R by auto 
+qed
+
+
+(* Now we have (for sound theories) the strong form of Rosser's first, which 
+concludes the truth of the Rosser sentence \<phi>R: *)
+
+theorem godel_rosser_first_strong: "consistent \<Longrightarrow> \<not> prv \<phi>R \<and> \<not> prv (neg \<phi>R) \<and> isTrue \<phi>R"   
+  using isTrue_\<phi>R godel_rosser_first by blast
+
+theorem godel_rosser_first_strong_ex: 
+"consistent \<Longrightarrow> \<exists> \<phi>. \<phi> \<in> fmla \<and> \<not> prv \<phi> \<and> \<not> prv (neg \<phi>) \<and> isTrue \<phi>" 
+  using godel_rosser_first_strong by (intro exI[of _ \<phi>R]) blast
+
+end \<comment> \<open>Rosser_Form_Proofs_Minimal_Truth\<close>
+
 
 
 context Rosser_Form
@@ -264,93 +325,21 @@ and N S P
 and isTrue
 and Pf 
 
-
-
-(* ... established as a sublocale statement *)
+(* Semantic Godel's first, Godel-style, second variant 
+... established as a sublocale statement *)
 sublocale 
   Rosser_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf < 
-  min_truth: Rosser_Form_with_Proofs_and_Minimal_Truth 
+  recover_proofs: Rosser_Form_Proofs_Minimal_Truth 
   where prfOf = prfOf and "proof" = "proof" and encPf = encPf 
   and prv = prv and bprv = bprv
   by standard  
- 
 
 
-context Rosser_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf
-begin  
-
-abbreviation \<phi>R where "\<phi>R \<equiv> min_truth.\<phi>R"
-abbreviation P' where "P' \<equiv> min_truth.P'"
-abbreviation PP' where "PP' \<equiv> min_truth.PP'"
-
-lemma Fvars_PP'[simp]: "Fvars (PP' \<langle>\<phi>R\<rangle>) = {}" unfolding min_truth.PP'_def 
-  by (subst Fvars_subst) auto
-
-lemma Fvars_RR'[simp]: "Fvars (min_truth.RR (Var yy) \<langle>\<phi>R\<rangle>) = {yy}" 
-  unfolding min_truth.RR_def
-  by (subst Fvars_psubst) (fastforce intro!: exI[of _ "{yy}"])+
-
-lemma isTrue_PPf_implies_\<phi>R: 
-assumes "isTrue (all yy (neg (M.repr.PPf (Var yy) \<langle>\<phi>R\<rangle>)))"
-(is "isTrue ?H")
-shows "isTrue \<phi>R" 
-proof-  
-  define F where "F \<equiv> min_truth.RR (Var yy) \<langle>\<phi>R\<rangle>"
-  have [simp]: "F \<in> fmla" "Fvars F = {yy}" 
-    unfolding F_def by auto
-  have [simp]: "exi yy (M.repr.PPf (Var yy) \<langle>\<phi>R\<rangle>) \<in> fmla" 
-    unfolding M.repr.PPf_def by auto
-
-  have 1: "bprv
-     (imp (all yy (neg (M.repr.PPf (Var yy) \<langle>\<phi>R\<rangle>)))
-       (neg (exi yy (M.repr.PPf (Var yy) \<langle>\<phi>R\<rangle>))))"
-  (is "bprv (imp (all yy (neg ?G)) (neg (exi yy ?G)))")
-    using B.prv_all_neg_imp_neg_exi[of yy ?G] by auto
-  have 2: "bprv (imp (neg (exi yy ?G)) (neg (exi yy (cnj ?G F))))" 
-    by (auto intro!: B.prv_imp_neg_rev B.prv_exi_cong B.prv_imp_cnjL)
-  have "bprv (imp (all yy (neg ?G)) (neg (exi yy (cnj ?G F))))" 
-    using B.prv_prv_imp_trans[OF _ _ _  1 2] by simp
-  hence "bprv (imp ?H (neg (PP' \<langle>\<phi>R\<rangle>)))"
-    unfolding min_truth.PP'_def min_truth.P'_def 
-    by (simp add: F_def) 
-  from B.prv_prv_imp_trans[OF _ _ _  this min_truth.bprv_imp_\<phi>R]
-  have "bprv (imp ?H \<phi>R)" by auto   
-  from prv_imp_implies_isTrue[OF _ _ _ _ this assms, simplified]
-  show ?thesis . 
-qed
-     
-theorem isTrue_\<phi>R:
-  assumes "consistent"
-  shows "isTrue \<phi>R" 
-proof-   
-  have "\<forall> n \<in> num. bprv (neg (M.repr.PPf n \<langle>\<phi>R\<rangle>))" 
-    using M.repr.not_prv_prv_neg_PPf[OF _ _ min_truth.godel_rosser_first_theEasyHalf[OF assms]]
-    by auto
-  hence "\<forall> n \<in> num. isTrue (neg (M.repr.PPf n \<langle>\<phi>R\<rangle>))" by (auto intro: prv_sound_isTrue) 
-  hence "isTrue (all yy (neg (M.repr.PPf (Var yy) \<langle>\<phi>R\<rangle>)))" by (auto intro: isTrue_all)
-  thus ?thesis using isTrue_PPf_implies_\<phi>R by auto 
-qed
-
-
-
-(* Now we have (for sound theories) the strong form of Rosser's first, which 
-concludes the truth of the Rosser sentence \<phi>R: *)
-
-theorem godel_rosser_first_strong: "consistent \<Longrightarrow> \<not> prv \<phi>R \<and> \<not> prv (neg \<phi>R) \<and> isTrue \<phi>R"   
-  using isTrue_\<phi>R min_truth.godel_rosser_first by blast
-
-theorem godel_rosser_first_strong_ex: 
-"consistent \<Longrightarrow> \<exists> \<phi>. \<phi> \<in> fmla \<and> \<not> prv \<phi> \<and> \<not> prv (neg \<phi>) \<and> isTrue \<phi>" 
-  using godel_rosser_first_strong by (intro exI[of _ \<phi>R]) blast
-
-end \<comment> \<open>Rosser_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf\<close>
-
-
-(* Theorem 16 (semantic Godel's first, Rosser-style, 
-with intuinistic deduction for both bprv and prv) *)
+(* ... and here is the explicit statement, inside the locale that 
+provides all the assumptions *)
 context Rosser_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf 
 begin
-thm godel_rosser_first_strong 
+thm recover_proofs.godel_rosser_first_strong 
 end
 
 

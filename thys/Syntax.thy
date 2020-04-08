@@ -119,14 +119,16 @@ lemma inj_Variable[simp]: "\<And> i j. Variable i = Variable j \<longleftrightar
   and Variable[simp,intro!]: "\<And>i. Variable i \<in> var"
   using Variable_inj_var image_def unfolding inj_def by auto
 
-text \<open> Convenient notations for some variables \<close>
-abbreviation xx where "xx \<equiv> Variable 0"
-abbreviation yy where "yy \<equiv> Variable (Suc 0)"
-abbreviation zz where "zz \<equiv> Variable (Suc (Suc 0))"
+text \<open> Convenient notations for some variables 
+We reserve the first 10 indexes for any special variables we 
+may wish to consider later. \<close>
+abbreviation xx where "xx \<equiv> Variable 10"
+abbreviation yy where "yy \<equiv> Variable 11"
+abbreviation zz where "zz \<equiv> Variable 12"
 
-abbreviation xx' where "xx' \<equiv> Variable (Suc (Suc (Suc 0)))"
-abbreviation yy' where "yy' \<equiv> Variable ((Suc (Suc (Suc (Suc 0)))))"
-abbreviation zz' where "zz' \<equiv> Variable (Suc (Suc (Suc (Suc (Suc 0)))))"
+abbreviation xx' where "xx' \<equiv> Variable 13"
+abbreviation yy' where "yy' \<equiv> Variable 14"
+abbreviation zz' where "zz' \<equiv> Variable 15"
 
 lemma xx: "xx \<in> var"
   and yy: "yy \<in> var"
@@ -2089,6 +2091,112 @@ lemma LLq_simps[simp]:
   by (auto simp: LLq_def2 Fvars_subst subst2_fresh_switch)
 
 end \<comment> \<open>context PseudoOrder\<close>
+
+
+(* So far, we did not need any renaming axiom for the quantifiers. However, 
+our axioms for substitution implicitly assume the irrelevance of the bound names; 
+in other words, their instances would have this property; and since this assumption 
+greatly simplifies the more concrete development we are about to engage in, we make it at this point.
+ *)
+locale Syntax_with_Connectives_Rename =
+Syntax_with_Connectives 
+  var trm fmla Var FvarsT substT Fvars subst
+  eql cnj imp all exi 
+for 
+var :: "'var set" and trm :: "'trm set" and fmla :: "'fmla set" 
+and Var FvarsT substT Fvars subst
+and eql cnj imp all exi 
++
+assumes all_rename: 
+"\<And>\<phi> x y. \<phi> \<in> fmla \<Longrightarrow> x \<in> var \<Longrightarrow> y \<in> var \<Longrightarrow> y \<notin> Fvars \<phi> \<Longrightarrow> 
+  all x \<phi> = all y (subst \<phi> (Var y) x)"
+and exi_rename: 
+"\<And>\<phi> x y. \<phi> \<in> fmla \<Longrightarrow> x \<in> var \<Longrightarrow> y \<in> var \<Longrightarrow> y \<notin> Fvars \<phi> \<Longrightarrow> 
+  exi x \<phi> = exi y (subst \<phi> (Var y) x)"
+begin
+
+lemma all_rename2: 
+"\<phi> \<in> fmla \<Longrightarrow> x \<in> var \<Longrightarrow> y \<in> var \<Longrightarrow> (y = x \<or> y \<notin> Fvars \<phi>) \<Longrightarrow> 
+  all x \<phi> = all y (subst \<phi> (Var y) x)"
+apply(cases "y = x") using all_rename by auto
+
+lemma exi_rename2: 
+"\<phi> \<in> fmla \<Longrightarrow> x \<in> var \<Longrightarrow> y \<in> var \<Longrightarrow> (y = x \<or> y \<notin> Fvars \<phi>) \<Longrightarrow> 
+  exi x \<phi> = exi y (subst \<phi> (Var y) x)"
+apply(cases "y = x") using exi_rename by auto
+
+(*****************************)
+(* The exists-unique quantifier: *)
+
+(* Phrased in such a way as to avoid substitution: *)
+definition exu :: "'var \<Rightarrow> 'fmla \<Rightarrow> 'fmla" where 
+"exu x \<phi> \<equiv> let y = getFr [x] [] [\<phi>] in 
+ cnj (exi x \<phi>) (exi y (all x (imp \<phi> (eql (Var x) (Var y)))))"
+
+lemma exu[simp,intro]: 
+"x \<in> var \<Longrightarrow> \<phi> \<in> fmla \<Longrightarrow> exu x \<phi> \<in> fmla"
+unfolding exu_def by (simp add: Let_def)
+
+lemma Fvars_exu[simp]: 
+"x \<in> var \<Longrightarrow> \<phi> \<in> fmla \<Longrightarrow> Fvars (exu x \<phi>) = Fvars \<phi> - {x}"
+unfolding exu_def by (auto simp: Let_def Fvars_subst getFr_Fvars)  
+
+lemma exu_def_var:
+assumes [simp]: "x \<in> var" "y \<in> var" "y \<noteq> x" "y \<notin> Fvars \<phi>" "\<phi> \<in> fmla"
+shows   
+"exu x \<phi> = cnj (exi x \<phi>) (exi y (all x (imp \<phi> (eql (Var x) (Var y)))))"
+proof-
+   have [simp]: "x \<noteq> y" using assms by blast
+  define z where z: "z \<equiv> getFr [x] [] [\<phi>]" 
+  have z_facts[simp]:  "z \<in> var" "z \<noteq> x" "x \<noteq> z" "z \<notin> Fvars \<phi>"
+  unfolding z using getFr_FvarsT_Fvars[of "[x]" "[]" "[\<phi>]"] by auto  
+  define u where u: "u \<equiv> getFr [x,y,z] [] [\<phi>]" 
+  have u_facts[simp]:  "u \<in> var" "u \<noteq> x" "u \<noteq> z" "y \<noteq> u" "u \<noteq> y" "x \<noteq> u" "z \<noteq> u" "u \<notin> Fvars \<phi>"
+  unfolding u using getFr_FvarsT_Fvars[of "[x,y,z]" "[]" "[\<phi>]"] by auto    
+
+  have "exu x \<phi> =  cnj (exi x \<phi>) (exi u (all x (imp \<phi> (eql (Var x) (Var u)))))"
+  apply(simp add: exu_def Let_def z[symmetric]) 
+  by (auto simp: exi_rename[of "all x (imp \<phi> (eql (Var x) (Var z)))" z u] Fvars_subst)
+  also have "\<dots> = cnj (exi x \<phi>) (exi y (all x (imp \<phi> (eql (Var x) (Var y)))))"
+  by (auto simp: exi_rename[of "all x (imp \<phi> (eql (Var x) (Var u)))" u y] 
+    Fvars_subst split: if_splits)   
+  finally show ?thesis .  
+qed
+
+lemma subst_exu[simp]: 
+assumes [simp]: "\<phi> \<in> fmla" "t \<in> trm" "x \<in> var" "y \<in> var" "x \<noteq> y" "x \<notin> FvarsT t"
+shows "subst (exu x \<phi>) t y = exu x (subst \<phi> t y)"
+proof-
+  define u where u: "u \<equiv> getFr [x,y] [t] [\<phi>]" 
+  have u_facts[simp]:  "u \<in> var" "u \<noteq> x" "u \<noteq> y" "y \<noteq> u" "x \<noteq> u" 
+    "u \<notin> FvarsT t" "u \<notin> Fvars \<phi>"
+  unfolding u using getFr_FvarsT_Fvars[of "[x,y]" "[t]" "[\<phi>]"] by auto
+  show ?thesis
+  by (auto simp: Let_def exu_def_var[of _ u] Fvars_subst subst_compose_diff)  
+qed
+
+lemma exu_rename: 
+assumes [simp]: "\<phi> \<in> fmla" "x \<in> var" "y \<in> var" "y \<notin> Fvars \<phi>"
+shows "exu x \<phi> = exu y (subst \<phi> (Var y) x)"
+proof(cases "y = x")
+  case [simp]: False
+  define z where z: "z = getFr [x] [] [\<phi>]"
+  have z_facts[simp]:  "z \<in> var" "z \<noteq> x" "x \<noteq> z" "z \<notin> Fvars \<phi>"
+  unfolding z using getFr_FvarsT_Fvars[of "[x]" "[]" "[\<phi>]"] by auto
+  define u where u: "u \<equiv> getFr [x,y,z] [] [\<phi>]" 
+  have u_facts[simp]: "u \<in> var" "u \<noteq> x" "x \<noteq> u" "u \<noteq> y" "y \<noteq> u" "u \<noteq> z" "z \<noteq> u"
+     "u \<notin> Fvars \<phi>"
+  unfolding u using getFr_FvarsT_Fvars[of "[x,y,z]" "[]" "[\<phi>]"] by auto
+  show ?thesis   apply( simp add: Fvars_subst exu_def_var[of _ u] exi_rename[of _ _ y]) 
+    apply(subst all_rename[of _ _ y]) by auto
+qed auto
+
+lemma exu_rename2: 
+"\<phi> \<in> fmla \<Longrightarrow> x \<in> var \<Longrightarrow> y \<in> var \<Longrightarrow> (y = x \<or> y \<notin> Fvars \<phi>) \<Longrightarrow> 
+  exu x \<phi> = exu y (subst \<phi> (Var y) x)"
+apply(cases "y = x") using exu_rename by auto
+
+end \<comment> \<open>Syntax_with_Connectives_Rename\<close>
 
 (*<*)
 end

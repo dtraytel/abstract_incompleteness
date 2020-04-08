@@ -19,7 +19,7 @@ and eql cnj imp all exi
 and prv bprv
 and enc ("\<langle>_\<rangle>") 
 +
-(* Weak represenatbility of provability, as a one-variable formula P, usually called the provability predicate: *)
+(* Very-weak represenatbility of provability, as a one-variable formula P, usually called the provability predicate: *)
 fixes P :: 'fmla
 assumes 
 P[intro!,simp]: "P \<in> fmla"
@@ -110,7 +110,7 @@ definition NN where "NN \<equiv> \<lambda> t1 t2. psubst N [(t1,xx), (t2,yy)]"
 
 lemma NN_def2: "t1 \<in> trm \<Longrightarrow> t2 \<in> trm \<Longrightarrow> yy \<notin> FvarsT t1 \<Longrightarrow> 
  NN t1 t2 = subst (subst N t1 xx) t2 yy"
-  unfolding NN_def apply(rule psubst_eq_rawpsubst2[simplified]) by auto
+  unfolding NN_def by (rule psubst_eq_rawpsubst2[simplified]) auto
 
 lemma NN_neg: 
 "\<phi> \<in> fmla \<Longrightarrow> Fvars \<phi> = {} \<Longrightarrow> bprv (NN \<langle>\<phi>\<rangle> \<langle>neg \<phi>\<rangle>)"
@@ -173,11 +173,10 @@ proof-
   have 32: "bprv (imp (NN \<langle>\<phi>\<rangle> \<langle>neg \<phi>\<rangle>)
                       (all yy' (imp (NN \<langle>\<phi>\<rangle> (Var yy'))
                                     (eql \<langle>neg \<phi>\<rangle> (Var yy')))))"
-    apply(rule B.prv_all_imp[OF _ _ _ _ 31])
-    by (auto simp: NN_def2 Fvars_subst) 
+    by (rule B.prv_all_imp[OF _ _ _ _ 31]) (auto simp: NN_def2 Fvars_subst) 
   have 33: "bprv (all yy' (imp (NN \<langle>\<phi>\<rangle> (Var yy'))
                               (eql \<langle>neg \<phi>\<rangle> (Var yy'))))"
-    apply(rule B.prv_imp_mp [OF _ _ 32 1]) by auto
+    by (rule B.prv_imp_mp [OF _ _ 32 1]) auto
   thus ?thesis using B.all_subst_rename_prv[OF _ _ _ _ 33, of yy] by simp
 qed
 
@@ -189,7 +188,7 @@ shows
 proof-
   have 0: "bprv (all yy ?A)"
     using NN_unique2[of "\<phi>"] by simp
-  show ?thesis apply(rule B.allE_id[OF _ _ 0]) by auto
+  show ?thesis by (rule B.allE_id[OF _ _ 0]) auto
 qed
 
 lemma NN_exi_cnj: 
@@ -208,7 +207,7 @@ proof(intro B.prv_eqvI)
     by (smt \<phi> enc in_num neg) 
 next    
   have 00: "bprv (imp (eql \<langle>neg \<phi>\<rangle> (Var yy)) (imp \<chi> (subst \<chi> \<langle>neg \<phi>\<rangle> yy)))" 
-    apply(rule B.prv_eql_subst_trm_id_rev) by auto
+    by (rule B.prv_eql_subst_trm_id_rev) auto
   have 11: "bprv (imp (NN \<langle>\<phi>\<rangle> (Var yy)) (imp \<chi> (subst \<chi> \<langle>neg \<phi>\<rangle> yy)))"  
     using 00 NN_neg_unique[OF \<phi>] 
     using NN num Var Variable \<phi> \<chi> eql imp subst B.prv_prv_imp_trans 
@@ -277,8 +276,7 @@ definition SS where "SS \<equiv> \<lambda> t1 t2. psubst S [(t1,xx), (t2,yy)]"
 lemma SS_def2: "t1 \<in> trm \<Longrightarrow> t2 \<in> trm \<Longrightarrow> 
  yy \<notin> FvarsT t1 \<Longrightarrow>
  SS t1 t2 = subst (subst S t1 xx) t2 yy"
-  unfolding SS_def apply(rule psubst_eq_rawpsubst2[simplified])
-  by auto
+  unfolding SS_def by (rule psubst_eq_rawpsubst2[simplified]) auto
 
 lemma subst_implies_prv_SS: 
 "\<phi> \<in> fmla \<Longrightarrow> Fvars \<phi> = {xx} \<Longrightarrow> bprv (SS \<langle>\<phi>\<rangle> \<langle>subst \<phi> \<langle>\<phi>\<rangle> xx\<rangle>)"
@@ -373,8 +371,7 @@ definition SS where "SS \<equiv> \<lambda> t1 t2. psubst S [(t1,xx), (t2,yy)]"
 lemma SS_def2: "t1 \<in> trm \<Longrightarrow> t2 \<in> trm \<Longrightarrow> 
  yy \<notin> FvarsT t1 \<Longrightarrow>
  SS t1 t2 = subst (subst S t1 xx) t2 yy"
-  unfolding SS_def apply(rule psubst_eq_rawpsubst2[simplified])
-  by auto
+  unfolding SS_def by (rule psubst_eq_rawpsubst2[simplified]) auto
 
 lemma softSubst_implies_prv_SS: 
 "\<phi> \<in> fmla \<Longrightarrow> Fvars \<phi> = {xx} \<Longrightarrow> bprv (SS \<langle>\<phi>\<rangle> \<langle>softSubst \<phi> \<langle>\<phi>\<rangle> xx\<rangle>)"
@@ -495,7 +492,7 @@ lemma PPf[simp,intro!]: "t1 \<in> trm \<Longrightarrow> t2 \<in> trm \<Longright
 
 lemma PPf_def2: "t1 \<in> trm \<Longrightarrow> t2 \<in> trm \<Longrightarrow> xx \<notin> FvarsT t1 \<Longrightarrow> 
   PPf t1 t2 = subst (subst Pf t1 yy) t2 xx"
-  unfolding PPf_def apply(rule psubst_eq_rawpsubst2[simplified]) by auto
+  unfolding PPf_def by (rule psubst_eq_rawpsubst2[simplified]) auto
 
 
 lemma Fvars_PPf[simp]: 
@@ -554,7 +551,7 @@ proof-
   hence 0: "bprv (PPf (encPf prf) (enc \<phi>))"  
     using prfOf_PPf \<phi> by auto 
   have 1: "subst (subst Pf (encPf prf) yy) \<langle>\<phi>\<rangle> xx = subst (subst Pf \<langle>\<phi>\<rangle> xx) (substT (encPf prf) \<langle>\<phi>\<rangle> xx) yy" 
-    apply(rule subst_compose_diff) using assms pf by auto
+     using assms pf by (intro subst_compose_diff) auto
   show ?thesis using 0 unfolding P_def using assms 
     by (auto simp: PPf_def2 1 pf intro!: B.prv_exiI[of _ _ "encPf prf"]) 
 qed
@@ -581,7 +578,7 @@ end \<comment> \<open>context Repr_Proofs\<close>
 
 sublocale Repr_Proofs < wrepr: WRepr_Provability 
   where P = P
-  apply standard using HBL1 by auto
+  using HBL1 by unfold_locales auto
 
 
 context Repr_Proofs
@@ -589,9 +586,10 @@ begin
 
 lemma PP_PPf: 
 assumes "\<phi> \<in> fmla"
-shows "wrepr.PP \<langle>\<phi>\<rangle> = exi yy (PPf (Var yy) \<langle>\<phi>\<rangle>)"
-by (metis FvarsT_Var FvarsT_num Var wrepr.PP_def PPf_def2 P_def Pf assms 
- empty_iff enc in_num inj_Variable insert_iff nat.distinct(1) subst_exi subst_same_Var xx yy)
+shows "wrepr.PP \<langle>\<phi>\<rangle> = exi yy (PPf (Var yy) \<langle>\<phi>\<rangle>)" 
+unfolding wrepr.PP_def apply(subst PPf_def2) 
+using assms apply simp_all  unfolding P_def apply(subst subst_exi, simp_all)
+by (subst PPf_def2, auto) 
 
 (* The reverse HLB1 condition follows from a standard notion of \<omega>consistency for bprv
 and strong representability of proofs:  *) 

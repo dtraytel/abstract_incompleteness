@@ -8,6 +8,7 @@ imports
   Abstract_First_Godel_Rosser
   Abstract_Second_Godel
   Jeroslow
+  Jeroslow_Corrected
   Lob
   Tarski
 begin

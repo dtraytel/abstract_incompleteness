@@ -56,7 +56,7 @@ WRepr_Provability
     and N S P 
 
 
-locale Rosser_Form_with_Proofs =  
+locale Rosser_Form_Proofs =  
 Deduct2_with_PseudoOrder
   var trm fmla Var FvarsT substT Fvars subst
   eql cnj imp all exi 
@@ -108,7 +108,7 @@ Repr_Proofs
     and S
     and encPf Pf
 
-context Rosser_Form_with_Proofs
+context Rosser_Form_Proofs
 begin 
 
 definition R where "R = all zz (imp (LLq (Var zz) (Var yy))
@@ -172,10 +172,10 @@ lemma prv_imp_\<phi>R:
 end \<comment> \<open>context Rosser_Form\<close>
 
 
-sublocale Rosser_Form_with_Proofs < Rosser_Form where P = P
+sublocale Rosser_Form_Proofs < Rosser_Form where P = P
   by standard
 
-sublocale Rosser_Form_with_Proofs < Godel_Form where P = P
+sublocale Rosser_Form_Proofs < Godel_Form where P = P
   by standard
 
 

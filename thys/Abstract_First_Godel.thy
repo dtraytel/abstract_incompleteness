@@ -27,7 +27,7 @@ using godel_first_theEasyHalf_pos unfolding consistent_def by auto
 end \<comment> \<open>context Godel_Form\<close>
 
 (* The other half needs explicit proofs: *)
-context Godel_Form_with_Proofs begin
+context Godel_Form_Proofs begin
   
 lemma godel_first_theHardHalf: 
 assumes oc: "\<omega>consistent"
@@ -59,7 +59,7 @@ shows "\<exists> \<phi>. \<phi> \<in> fmla \<and> \<not> prv \<phi> \<and> \<not
   using assms godel_first by (intro exI[of _ \<phi>G]) blast
 
 
-end \<comment> \<open>context Godel_Form_with_Proofs\<close>
+end \<comment> \<open>context Godel_Form_Proofs\<close>
 
 
 (* THE MODEL-THEORETIC VERSION *)
@@ -68,8 +68,8 @@ end \<comment> \<open>context Godel_Form_with_Proofs\<close>
 (********************************)
 (* The truth of the Godel sentence \<phi>G in the standard model *)
 
-locale Godel_Form_with_Proofs_and_Minimal_Truth = 
-Godel_Form_with_Proofs 
+locale Godel_Form_Proofs_Minimal_Truth = 
+Godel_Form_Proofs 
   var trm fmla Var FvarsT substT Fvars subst
   num
   eql cnj imp all exi 
@@ -112,10 +112,10 @@ theorem isTrue_\<phi>G:
 proof-
   have "\<forall> n \<in> num. bprv (neg (PPf n \<langle>\<phi>G\<rangle>))" 
   using not_prv_prv_neg_PPf[OF _ _ godel_first_theEasyHalf[OF assms]] by auto
-  hence "\<forall> n \<in> num. isTrue (neg (PPf n \<langle>\<phi>G\<rangle>))" by (auto intro: prv_sound_isTrue)
+  hence "\<forall> n \<in> num. isTrue (neg (PPf n \<langle>\<phi>G\<rangle>))" by (auto intro: bprv_sound_isTrue)
   hence "isTrue (all yy (neg (PPf (Var yy) \<langle>\<phi>G\<rangle>)))" by (auto intro: isTrue_all)
   moreover have "isTrue (imp (all yy (neg (PPf (Var yy) \<langle>\<phi>G\<rangle>))) \<phi>G)"
-  using bprv_eqv_all_not_PPf_imp_\<phi>G by (auto intro!: prv_sound_isTrue) 
+  using bprv_eqv_all_not_PPf_imp_\<phi>G by (auto intro!: bprv_sound_isTrue) 
   ultimately show ?thesis by (rule isTrue_imp[rotated -2]) auto
 qed
 
@@ -132,13 +132,8 @@ theorem godel_first_strong_ex:
 "\<omega>consistent \<Longrightarrow> \<exists> \<phi>. \<phi> \<in> fmla \<and> \<not> prv \<phi> \<and> \<not> prv (neg \<phi>) \<and> isTrue \<phi>" 
   using godel_first_strong by (intro exI[of _ \<phi>G]) blast
 
-(* NB: Since \<omega>consistency (as well as consistency) is a consequence of soundness, 
-it turns out that, fr sound theories, our locale for Godel first is in principle 
-easier to instantiate than our locale for Godel-Rosser (which instead of \<omega>consistency asks 
-for an order-like relation subject to two axioms). 
-*)
 
-end \<comment> \<open>context Godel_Form_with_Proofs_and_Minimal_Truth\<close>
+end \<comment> \<open>context Godel_Form_Proofs_Minimal_Truth\<close>
 
 
 
@@ -222,13 +217,11 @@ and Pf
 +
 assumes prv_\<omega>consistent: "\<omega>consistent"
 
-(* Theorem 15 (semantic Godel's first, Godel-style, 
-with intuinistic deduction for both bprv and prv) *)
-
-(* ... established as a sublocale statement *)
+(* Semantic Godel's first, Godel-style, second variant 
+... established as a sublocale statement *)
 sublocale 
   Godel_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf < 
-  min_truth: Godel_Form_with_Proofs_and_Minimal_Truth 
+  recover_proofs: Godel_Form_Proofs_Minimal_Truth 
   where prfOf = prfOf and "proof" = "proof" and encPf = encPf 
   and prv = prv and bprv = bprv
   by standard  
@@ -236,7 +229,7 @@ sublocale
 (* ... and here is the explicit statement, inside the locale that 
 provides all the assumptions *)
 context Godel_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf begin
-thm min_truth.godel_first_strong 
+thm recover_proofs.godel_first_strong 
 
 end
 
@@ -246,7 +239,7 @@ end
 
 (* THE CLASSICAL VERSION: *)
 (**************************************)
-(* To further obtain that the Godel formula is true, Classic takes advantage of soundness 
+(* To further obtain that the Godel formula is true, Classic takes advantage of Minimal_Truth_Soundness 
 (w.r.t. a standard model) 
 together with the fact that the truth of P \<langle>\<phi>\<rangle> implies the provability of \<phi>: 
 *)
@@ -321,7 +314,7 @@ shows "\<exists> \<phi>. \<phi> \<in> fmla \<and> \<not> prv \<phi> \<and> \<not
 
 end \<comment> \<open>Godel_Form_Classical_HBL1_rev_prv\<close>
 
-locale Godel_Form_Classical_HBL1_rev_prv_Soundness_TIP =  
+locale Godel_Form_Classical_HBL1_rev_prv_Minimal_Truth_Soundness_TIP =  
 Godel_Form_Classical_HBL1_rev_prv 
   var trm fmla Var num FvarsT substT Fvars subst
   eql cnj imp all exi 
@@ -377,14 +370,14 @@ proof-
   thus ?thesis by auto
 qed
 
-theorem godel_first_strong: "consistent \<Longrightarrow> \<not> prv \<phi>G \<and> \<not> prv (neg \<phi>G) \<and> isTrue \<phi>G"
+theorem godel_first_classic_strong: "consistent \<Longrightarrow> \<not> prv \<phi>G \<and> \<not> prv (neg \<phi>G) \<and> isTrue \<phi>G"
   using godel_first_classic isTrue_\<phi>G by simp
 
-theorem godel_first_strong_ex: 
+theorem godel_first_classic_strong_ex: 
 "consistent \<Longrightarrow> \<exists> \<phi>. \<phi> \<in> fmla \<and> \<not> prv \<phi> \<and> \<not> prv (neg \<phi>) \<and> isTrue \<phi>" 
-  using godel_first_strong by (intro exI[of _ \<phi>G]) blast 
+  using godel_first_classic_strong by (intro exI[of _ \<phi>G]) blast 
 
-end \<comment> \<open>locale Godel_Form_Classical_HBL1_rev_prv_Soundness_TIP\<close>
+end \<comment> \<open>locale Godel_Form_Classical_HBL1_rev_prv_Minimal_Truth_Soundness_TIP\<close>
 
 context Godel_Form
 begin
@@ -426,48 +419,23 @@ and S
 and isTrue
 and P
 and Pf 
-begin
 
-lemma TIP_PP: 
-assumes 1: "\<phi> \<in> fmla" "Fvars \<phi> = {}" and 2: "isTrue (PP \<langle>\<phi>\<rangle>)"
-shows "prv \<phi>"
-proof-
-  obtain n where nn: "n \<in> num" and i: "isTrue (mts_prv_mts.PPf n \<langle>\<phi>\<rangle>)" 
-   using 2 unfolding mts_prv_mts.isTrue_exi_iff_PP[OF 1] .. 
-  hence "bprv (mts_prv_mts.PPf n \<langle>\<phi>\<rangle>)" 
-    using i using nn assms mts_prv_mts.isTrue_iff_prv_PPf by blast
-  hence "bprv (exi yy (mts_prv_mts.PPf (Var yy) \<langle>\<phi>\<rangle>))"  
-  using 2 assms mts_prv_mts.isTrue_exi_iff mts_prv_mts.isTrue_exi_iff_PP mts_prv_mts.prv_exi_PPf_iff_isTrue by auto
-  hence "bprv (PP \<langle>\<phi>\<rangle>)" using mts_prv_mts.PP_PPf 1 by blast
-  thus ?thesis using HBL1_iff assms by blast
-qed 
-
-end \<comment> \<open>context Godel_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Classical\<close>
- 
 
 sublocale Godel_Form_Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf_Classical < 
-  cls: Godel_Form_Classical_HBL1_rev_prv_Soundness_TIP where prv = prv and bprv = bprv
-proof (standard, goal_cases classical rev_rpv TIP)
+  recover_proofs: Godel_Form_Classical_HBL1_rev_prv_Minimal_Truth_Soundness_TIP where prv = prv and bprv = bprv
+proof (standard, goal_cases classical rev_rpv TIPf)
   case (classical \<phi>)
   then show ?case using HBL1_iff classical_P by (simp add: mts_prv_mts.PP_deff)
 next
   case (rev_rpv \<phi>)
   then show ?case using HBL1_iff_prv PP_def by simp
 next
-  case (TIP \<phi>)
-  then show ?case using classical_P by (simp add: SS_def PP_def TIP_PP)
+  case (TIPf \<phi>)
+  then show ?case using classical_P by (simp add: SS_def PP_def mts_prv_mts.TIP)
 qed
 
-(*TODO: drop for AFP entry*)
 context Godel_Form_Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf_Classical begin
-thm cls.godel_first_strong
+thm recover_proofs.godel_first_classic_strong
 end (* context Godel_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Classical *)
-
-lemma "Godel_Form_Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf_Classical
-      var trm fmla Var FvarsT substT Fvars subst eql cnj imp all
-      exi fls dsj num prv bprv enc S isTrue P Pf"
-  using [[goals_limit=100]]
-  apply unfold_locales
-  oops
 
 end

@@ -1982,6 +1982,28 @@ These are based on properties of then auxiliary list disunctions. *)</span></spa
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Provability means there exists a proof (only needed for sentences) *)</span></span></span></span></span><span>
 </span><span>prv_prfOf</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8896; &#966;. &#966; &#8712; fmla &#10233; Fvars &#966; = {} &#10233; prv &#966; &#10231; (&#8707; prf &#8712; proof. prfOf prf &#966;)&quot;</span></span></span><span>
 </span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Adding the renaming axioms for syntax: *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Deduct_with_False_Disj_Rename</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>Deduct_with_False_Disj</span><span>  
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>prv</span><span>
+</span><span class="delimiter">+</span><span>
+</span><span>Syntax_with_Connectives_Rename</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span>
+</span><span>
 </span><span>
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Working with two provability relations:
 provability prv and basic provability bprv  *)</span></span></span></span></span><span>
@@ -2196,6 +2218,26 @@ but we can get away with the stronger assumption (on the left of the implication
 </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span>Lq_num2</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>LLq_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span> 
 </span><span>
 </span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Deduct_with_PseudoOrder&#8250;</span><span>
+</span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Variant where bprv = prv *)</span></span></span></span></span><span>
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Deduct_with_PseudoOrder</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>  </span><span>Deduct2_with_PseudoOrder</span><span>
+</span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
+</span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span>  </span><span>fls</span><span>
+</span><span>  </span><span>dsj</span><span>
+</span><span>  </span><span>num</span><span>
+</span><span>  </span><span>prv</span><span> </span><span>prv</span><span>
+</span><span>  </span><span>Lq</span><span>
+</span><span class="keyword2"><span class="keyword">for</span></span><span> 
+</span><span>var</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;var set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>trm</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;trm set&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fmla</span><span> </span><span class="delimiter">::</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#39;fmla set&quot;</span></span></span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>  
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>fls</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>dsj</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>num</span><span>
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span>bprv</span><span> 
+</span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Lq</span><span>
 </span><span>
 </span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Deduct2_with_Proofs_PseudoOrder</span><span> </span><span class="delimiter">=</span><span> 
 </span><span>Deduct2_with_Proofs</span><span>  

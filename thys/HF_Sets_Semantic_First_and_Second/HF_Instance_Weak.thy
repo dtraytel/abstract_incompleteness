@@ -400,7 +400,7 @@ interpretation g1: Godel_Form_Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf_Class
   done
 
 theorem Goedel_I: "\<exists>\<phi>. \<not> {} \<turnstile> \<phi> \<and> \<not> {} \<turnstile> Neg \<phi> \<and> eval_fm e0 \<phi>"
-  by (meson Iff_MP2_same g1.cls.godel_first_strong[unfolded consistent_def, OF consistent] neg_Neg)
+  by (meson Iff_MP2_same g1.recover_proofs.godel_first_classic_strong[unfolded consistent_def, OF consistent] neg_Neg)
 
 text \<open>
 The following interpretation is redundant, because Godel_Form_Classic_soundness is a sublocale
@@ -414,7 +414,7 @@ interpreted via the above g1 interpretation of Godel_Form_Minimal_Truth_Soundnes
 definition isTrue where
   "isTrue = eval_fm e0"
 
-interpretation g1': Godel_Form_Classical_HBL1_rev_prv_Soundness_TIP where
+interpretation g1': Godel_Form_Classical_HBL1_rev_prv_Minimal_Truth_Soundness_TIP where
       var = "UNIV :: name set"
   and trm = "UNIV :: tm set"
   and fmla = "UNIV :: fm set"
@@ -452,6 +452,6 @@ interpretation g1': Godel_Form_Classical_HBL1_rev_prv_Soundness_TIP where
   done
 
 theorem Goedel_I': "\<exists>\<phi>. \<not> {} \<turnstile> \<phi> \<and> \<not> {} \<turnstile> Neg \<phi> \<and> isTrue \<phi>"
-  by (meson Iff_MP2_same g1'.godel_first_strong[unfolded consistent_def, OF consistent] neg_Neg)
+  by (meson Iff_MP2_same g1'.godel_first_classic_strong[unfolded consistent_def, OF consistent] neg_Neg)
 
 end

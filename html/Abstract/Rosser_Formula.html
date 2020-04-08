@@ -73,7 +73,7 @@ is undecidable assuming consistency only (not &#969;consistency)&#8250;</span></
 </span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>N</span><span> </span><span>S</span><span> </span><span>P</span><span> 
 </span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Rosser_Form_with_Proofs</span><span> </span><span class="delimiter">=</span><span>  
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Rosser_Form_Proofs</span><span> </span><span class="delimiter">=</span><span>  
 </span><span>Deduct2_with_PseudoOrder</span><span>
 </span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
 </span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
@@ -125,7 +125,7 @@ is undecidable assuming consistency only (not &#969;consistency)&#8250;</span></
 </span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>S</span><span>
 </span><span>    </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>encPf</span><span> </span><span>Pf</span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Rosser_Form_with_Proofs</span><span>
+</span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Rosser_Form_Proofs</span><span>
 </span><span class="keyword2"><span class="keyword">begin</span></span><span> 
 </span><span>
 </span><span class="keyword1"><span class="command">definition</span></span><span> </span><span>R</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;R = all zz (imp (LLq (Var zz) (Var yy))
@@ -189,10 +189,10 @@ is undecidable assuming consistency only (not &#969;consistency)&#8250;</span></
 </span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Rosser_Form&#8250;</span><span>
 </span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Rosser_Form_with_Proofs</span><span> </span><span class="delimiter">&lt;</span><span> </span><span>Rosser_Form</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>P</span><span> </span><span class="delimiter">=</span><span> </span><span>P</span><span>
+</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Rosser_Form_Proofs</span><span> </span><span class="delimiter">&lt;</span><span> </span><span>Rosser_Form</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>P</span><span> </span><span class="delimiter">=</span><span> </span><span>P</span><span>
 </span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>standard</span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Rosser_Form_with_Proofs</span><span> </span><span class="delimiter">&lt;</span><span> </span><span>Godel_Form</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>P</span><span> </span><span class="delimiter">=</span><span> </span><span>P</span><span>
+</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Rosser_Form_Proofs</span><span> </span><span class="delimiter">&lt;</span><span> </span><span>Godel_Form</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>P</span><span> </span><span class="delimiter">=</span><span> </span><span>P</span><span>
 </span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>standard</span><span>
 </span><span>
 </span><span>

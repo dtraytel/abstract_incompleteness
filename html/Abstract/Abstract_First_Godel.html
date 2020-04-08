@@ -44,7 +44,7 @@ which only needs the fixpoint property of the Godel formula *)</span></span></sp
 </span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form&#8250;</span><span>
 </span><span>
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* The other half needs explicit proofs: *)</span></span></span></span></span><span>
-</span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Godel_Form_with_Proofs</span><span> </span><span class="keyword2"><span class="keyword">begin</span></span><span>
+</span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Godel_Form_Proofs</span><span> </span><span class="keyword2"><span class="keyword">begin</span></span><span>
 </span><span>  
 </span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>godel_first_theHardHalf</span><span class="delimiter">:</span><span> 
 </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>oc</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#969;consistent&quot;</span></span></span><span>
@@ -76,7 +76,7 @@ which only needs the fixpoint property of the Godel formula *)</span></span></sp
 </span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>assms</span><span> </span><span>godel_first</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>exI</span><span class="delimiter">[</span><span>of</span><span> </span><span>_</span><span> </span><span>&#966;G</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>blast</span><span>
 </span><span>
 </span><span>
-</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form_with_Proofs&#8250;</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form_Proofs&#8250;</span><span>
 </span><span>
 </span><span>
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* THE MODEL-THEORETIC VERSION *)</span></span></span></span></span><span>
@@ -85,8 +85,8 @@ which only needs the fixpoint property of the Godel formula *)</span></span></sp
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(********************************)</span></span></span></span></span><span>
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* The truth of the Godel sentence &#966;G in the standard model *)</span></span></span></span></span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Godel_Form_with_Proofs_and_Minimal_Truth</span><span> </span><span class="delimiter">=</span><span> 
-</span><span>Godel_Form_with_Proofs</span><span> 
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Godel_Form_Proofs_Minimal_Truth</span><span> </span><span class="delimiter">=</span><span> 
+</span><span>Godel_Form_Proofs</span><span> 
 </span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
 </span><span>  </span><span>num</span><span>
 </span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
@@ -129,10 +129,10 @@ which only needs the fixpoint property of the Godel formula *)</span></span></sp
 </span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span>
 </span><span>  </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8704; n &#8712; num. bprv (neg (PPf n &#10216;&#966;G&#10217;))&quot;</span></span></span><span> 
 </span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>not_prv_prv_neg_PPf</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>godel_first_theEasyHalf</span><span class="delimiter">[</span><span>OF</span><span> </span><span>assms</span><span class="delimiter">]</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
-</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8704; n &#8712; num. isTrue (neg (PPf n &#10216;&#966;G&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">:</span><span> </span><span>prv_sound_isTrue</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#8704; n &#8712; num. isTrue (neg (PPf n &#10216;&#966;G&#10217;))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">:</span><span> </span><span>bprv_sound_isTrue</span><span class="delimiter">)</span><span>
 </span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (all yy (neg (PPf (Var yy) &#10216;&#966;G&#10217;)))&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">:</span><span> </span><span>isTrue_all</span><span class="delimiter">)</span><span>
 </span><span>  </span><span class="keyword1"><span class="command">moreover</span></span><span> </span><span class="keyword1"><span class="command">have</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (imp (all yy (neg (PPf (Var yy) &#10216;&#966;G&#10217;))) &#966;G)&quot;</span></span></span><span>
-</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>bprv_eqv_all_not_PPf_imp_&#966;G</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">!</span><span class="delimiter">:</span><span> </span><span>prv_sound_isTrue</span><span class="delimiter">)</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>bprv_eqv_all_not_PPf_imp_&#966;G</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>auto</span><span> </span><span>intro</span><span class="delimiter">!</span><span class="delimiter">:</span><span> </span><span>bprv_sound_isTrue</span><span class="delimiter">)</span><span> 
 </span><span>  </span><span class="keyword1"><span class="command">ultimately</span></span><span> </span><span class="keyword3"><span class="command">show</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>rule</span><span> </span><span>isTrue_imp</span><span class="delimiter">[</span><span>rotated</span><span> </span><span>-</span><span>2</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>auto</span><span>
 </span><span class="keyword1"><span class="command">qed</span></span><span>
 </span><span>
@@ -149,13 +149,8 @@ concludes the truth of the Godel sentence &#966;G: *)</span></span></span></span
 </span><span class="string"><span class="delete"><span class="delete">&quot;&#969;consistent &#10233; &#8707; &#966;. &#966; &#8712; fmla &#8743; &#172; prv &#966; &#8743; &#172; prv (neg &#966;) &#8743; isTrue &#966;&quot;</span></span></span><span> 
 </span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>godel_first_strong</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>exI</span><span class="delimiter">[</span><span>of</span><span> </span><span>_</span><span> </span><span>&#966;G</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>blast</span><span>
 </span><span>
-</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* NB: Since &#969;consistency (as well as consistency) is a consequence of soundness, 
-it turns out that, fr sound theories, our locale for Godel first is in principle 
-easier to instantiate than our locale for Godel-Rosser (which instead of &#969;consistency asks 
-for an order-like relation subject to two axioms). 
-*)</span></span></span></span></span><span>
 </span><span>
-</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form_with_Proofs_and_Minimal_Truth&#8250;</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form_Proofs_Minimal_Truth&#8250;</span><span>
 </span><span>
 </span><span>
 </span><span>
@@ -239,13 +234,11 @@ for an order-like relation subject to two axioms).
 </span><span class="delimiter">+</span><span>
 </span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>prv_&#969;consistent</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#969;consistent&quot;</span></span></span><span>
 </span><span>
-</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Theorem 15 (semantic Godel&#39;s first, Godel-style, 
-with intuinistic deduction for both bprv and prv) *)</span></span></span></span></span><span>
-</span><span>
-</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* ... established as a sublocale statement *)</span></span></span></span></span><span>
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Semantic Godel&#39;s first, Godel-style, second variant 
+... established as a sublocale statement *)</span></span></span></span></span><span>
 </span><span class="keyword1"><span class="command">sublocale</span></span><span> 
 </span><span>  </span><span>Godel_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf</span><span> </span><span class="delimiter">&lt;</span><span> 
-</span><span>  </span><span>min_truth</span><span class="delimiter">:</span><span> </span><span>Godel_Form_with_Proofs_and_Minimal_Truth</span><span> 
+</span><span>  </span><span>recover_proofs</span><span class="delimiter">:</span><span> </span><span>Godel_Form_Proofs_Minimal_Truth</span><span> 
 </span><span>  </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>prfOf</span><span> </span><span class="delimiter">=</span><span> </span><span>prfOf</span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="delimiter">=</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;proof&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>encPf</span><span> </span><span class="delimiter">=</span><span> </span><span>encPf</span><span> 
 </span><span>  </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>prv</span><span> </span><span class="delimiter">=</span><span> </span><span>prv</span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>bprv</span><span> </span><span class="delimiter">=</span><span> </span><span>bprv</span><span>
 </span><span>  </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>standard</span><span>  
@@ -253,7 +246,7 @@ with intuinistic deduction for both bprv and prv) *)</span></span></span></span>
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* ... and here is the explicit statement, inside the locale that 
 provides all the assumptions *)</span></span></span></span></span><span>
 </span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Godel_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Compl_NegPf</span><span> </span><span class="keyword2"><span class="keyword">begin</span></span><span>
-</span><span class="keyword1"><span class="command">thm</span></span><span> </span><span>min_truth.godel_first_strong</span><span> 
+</span><span class="keyword1"><span class="command">thm</span></span><span> </span><span>recover_proofs.godel_first_strong</span><span> 
 </span><span>
 </span><span class="keyword2"><span class="keyword">end</span></span><span>
 </span><span>
@@ -263,7 +256,7 @@ provides all the assumptions *)</span></span></span></span></span><span>
 </span><span>
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* THE CLASSICAL VERSION: *)</span></span></span></span></span><span>
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(**************************************)</span></span></span></span></span><span>
-</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* To further obtain that the Godel formula is true, Classic takes advantage of soundness 
+</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* To further obtain that the Godel formula is true, Classic takes advantage of Minimal_Truth_Soundness 
 (w.r.t. a standard model) 
 together with the fact that the truth of P &#10216;&#966;&#10217; implies the provability of &#966;: 
 *)</span></span></span></span></span><span>
@@ -338,7 +331,7 @@ but only for the provability predicate: *)</span></span></span></span></span><sp
 </span><span>
 </span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;Godel_Form_Classical_HBL1_rev_prv&#8250;</span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Godel_Form_Classical_HBL1_rev_prv_Soundness_TIP</span><span> </span><span class="delimiter">=</span><span>  
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Godel_Form_Classical_HBL1_rev_prv_Minimal_Truth_Soundness_TIP</span><span> </span><span class="delimiter">=</span><span>  
 </span><span>Godel_Form_Classical_HBL1_rev_prv</span><span> 
 </span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>num</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
 </span><span>  </span><span>eql</span><span> </span><span>cnj</span><span> </span><span>imp</span><span> </span><span>all</span><span> </span><span>exi</span><span> 
@@ -394,14 +387,14 @@ but only for the provability predicate: *)</span></span></span></span></span><sp
 </span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
 </span><span class="keyword1"><span class="command">qed</span></span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">theorem</span></span><span> </span><span>godel_first_strong</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;consistent &#10233; &#172; prv &#966;G &#8743; &#172; prv (neg &#966;G) &#8743; isTrue &#966;G&quot;</span></span></span><span>
+</span><span class="keyword1"><span class="command">theorem</span></span><span> </span><span>godel_first_classic_strong</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;consistent &#10233; &#172; prv &#966;G &#8743; &#172; prv (neg &#966;G) &#8743; isTrue &#966;G&quot;</span></span></span><span>
 </span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>godel_first_classic</span><span> </span><span>isTrue_&#966;G</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">theorem</span></span><span> </span><span>godel_first_strong_ex</span><span class="delimiter">:</span><span> 
+</span><span class="keyword1"><span class="command">theorem</span></span><span> </span><span>godel_first_classic_strong_ex</span><span class="delimiter">:</span><span> 
 </span><span class="string"><span class="delete"><span class="delete">&quot;consistent &#10233; &#8707; &#966;. &#966; &#8712; fmla &#8743; &#172; prv &#966; &#8743; &#172; prv (neg &#966;) &#8743; isTrue &#966;&quot;</span></span></span><span> 
-</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>godel_first_strong</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>exI</span><span class="delimiter">[</span><span>of</span><span> </span><span>_</span><span> </span><span>&#966;G</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>blast</span><span> 
+</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>godel_first_classic_strong</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>intro</span><span> </span><span>exI</span><span class="delimiter">[</span><span>of</span><span> </span><span>_</span><span> </span><span>&#966;G</span><span class="delimiter">]</span><span class="delimiter">)</span><span> </span><span>blast</span><span> 
 </span><span>
-</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;locale Godel_Form_Classical_HBL1_rev_prv_Soundness_TIP&#8250;</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;locale Godel_Form_Classical_HBL1_rev_prv_Minimal_Truth_Soundness_TIP&#8250;</span><span>
 </span><span>
 </span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Godel_Form</span><span>
 </span><span class="keyword2"><span class="keyword">begin</span></span><span>
@@ -443,49 +436,24 @@ but only for the provability predicate: *)</span></span></span></span></span><sp
 </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>isTrue</span><span>
 </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>P</span><span>
 </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>Pf</span><span> 
-</span><span class="keyword2"><span class="keyword">begin</span></span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>TIP_PP</span><span class="delimiter">:</span><span> 
-</span><span class="keyword2"><span class="keyword">assumes</span></span><span> </span><span>1</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;&#966; &#8712; fmla&quot;</span></span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Fvars &#966; = {}&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>2</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (PP &#10216;&#966;&#10217;)&quot;</span></span></span><span>
-</span><span class="keyword2"><span class="keyword">shows</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;prv &#966;&quot;</span></span></span><span>
-</span><span class="keyword1"><span class="command">proof</span></span><span>-</span><span>
-</span><span>  </span><span class="keyword3"><span class="command">obtain</span></span><span> </span><span>n</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>nn</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;n &#8712; num&quot;</span></span></span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>i</span><span class="delimiter">:</span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;isTrue (mts_prv_mts.PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> 
-</span><span>   </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>2</span><span> </span><span class="keyword1"><span class="command">unfolding</span></span><span> </span><span>mts_prv_mts.isTrue_exi_iff_PP</span><span class="delimiter">[</span><span>OF</span><span> </span><span>1</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">..</span></span><span> 
-</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (mts_prv_mts.PPf n &#10216;&#966;&#10217;)&quot;</span></span></span><span> 
-</span><span>    </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>i</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>nn</span><span> </span><span>assms</span><span> </span><span>mts_prv_mts.isTrue_iff_prv_PPf</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
-</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (exi yy (mts_prv_mts.PPf (Var yy) &#10216;&#966;&#10217;))&quot;</span></span></span><span>  
-</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>2</span><span> </span><span>assms</span><span> </span><span>mts_prv_mts.isTrue_exi_iff</span><span> </span><span>mts_prv_mts.isTrue_exi_iff_PP</span><span> </span><span>mts_prv_mts.prv_exi_PPf_iff_isTrue</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>auto</span><span>
-</span><span>  </span><span class="keyword1"><span class="command">hence</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;bprv (PP &#10216;&#966;&#10217;)&quot;</span></span></span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>mts_prv_mts.PP_PPf</span><span> </span><span>1</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
-</span><span>  </span><span class="keyword3"><span class="command">thus</span></span><span> </span><span class="var">?thesis</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL1_iff</span><span> </span><span>assms</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>blast</span><span>
-</span><span class="keyword1"><span class="command">qed</span></span><span> 
-</span><span>
-</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Classical&#8250;</span><span>
-</span><span> 
 </span><span>
 </span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Godel_Form_Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf_Classical</span><span> </span><span class="delimiter">&lt;</span><span> 
-</span><span>  </span><span>cls</span><span class="delimiter">:</span><span> </span><span>Godel_Form_Classical_HBL1_rev_prv_Soundness_TIP</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>prv</span><span> </span><span class="delimiter">=</span><span> </span><span>prv</span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>bprv</span><span> </span><span class="delimiter">=</span><span> </span><span>bprv</span><span>
-</span><span class="keyword1"><span class="command">proof</span></span><span> </span><span class="delimiter">(</span><span>standard</span><span class="delimiter">,</span><span> </span><span>goal_cases</span><span> </span><span>classical</span><span> </span><span>rev_rpv</span><span> </span><span>TIP</span><span class="delimiter">)</span><span>
+</span><span>  </span><span>recover_proofs</span><span class="delimiter">:</span><span> </span><span>Godel_Form_Classical_HBL1_rev_prv_Minimal_Truth_Soundness_TIP</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>prv</span><span> </span><span class="delimiter">=</span><span> </span><span>prv</span><span> </span><span class="keyword2"><span class="keyword">and</span></span><span> </span><span>bprv</span><span> </span><span class="delimiter">=</span><span> </span><span>bprv</span><span>
+</span><span class="keyword1"><span class="command">proof</span></span><span> </span><span class="delimiter">(</span><span>standard</span><span class="delimiter">,</span><span> </span><span>goal_cases</span><span> </span><span>classical</span><span> </span><span>rev_rpv</span><span> </span><span>TIPf</span><span class="delimiter">)</span><span>
 </span><span>  </span><span class="keyword3"><span class="command">case</span></span><span> </span><span class="delimiter">(</span><span>classical</span><span> </span><span>&#966;</span><span class="delimiter">)</span><span>
 </span><span>  </span><span class="keyword1"><span class="command">then</span></span><span> </span><span class="keyword3"><span class="command">show</span></span><span> </span><span class="var">?case</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL1_iff</span><span> </span><span>classical_P</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>mts_prv_mts.PP_deff</span><span class="delimiter">)</span><span>
 </span><span class="keyword1"><span class="command">next</span></span><span>
 </span><span>  </span><span class="keyword3"><span class="command">case</span></span><span> </span><span class="delimiter">(</span><span>rev_rpv</span><span> </span><span>&#966;</span><span class="delimiter">)</span><span>
 </span><span>  </span><span class="keyword1"><span class="command">then</span></span><span> </span><span class="keyword3"><span class="command">show</span></span><span> </span><span class="var">?case</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>HBL1_iff_prv</span><span> </span><span>PP_def</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>simp</span><span>
 </span><span class="keyword1"><span class="command">next</span></span><span>
-</span><span>  </span><span class="keyword3"><span class="command">case</span></span><span> </span><span class="delimiter">(</span><span>TIP</span><span> </span><span>&#966;</span><span class="delimiter">)</span><span>
-</span><span>  </span><span class="keyword1"><span class="command">then</span></span><span> </span><span class="keyword3"><span class="command">show</span></span><span> </span><span class="var">?case</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>classical_P</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>SS_def</span><span> </span><span>PP_def</span><span> </span><span>TIP_PP</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword3"><span class="command">case</span></span><span> </span><span class="delimiter">(</span><span>TIPf</span><span> </span><span>&#966;</span><span class="delimiter">)</span><span>
+</span><span>  </span><span class="keyword1"><span class="command">then</span></span><span> </span><span class="keyword3"><span class="command">show</span></span><span> </span><span class="var">?case</span><span> </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>classical_P</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span class="delimiter">(</span><span>simp</span><span> </span><span>add</span><span class="delimiter">:</span><span> </span><span>SS_def</span><span> </span><span>PP_def</span><span> </span><span>mts_prv_mts.TIP</span><span class="delimiter">)</span><span>
 </span><span class="keyword1"><span class="command">qed</span></span><span>
 </span><span>
-</span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(*TODO: drop for AFP entry*)</span></span></span></span></span><span>
 </span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Godel_Form_Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf_Classical</span><span> </span><span class="keyword2"><span class="keyword">begin</span></span><span>
-</span><span class="keyword1"><span class="command">thm</span></span><span> </span><span>cls.godel_first_strong</span><span>
+</span><span class="keyword1"><span class="command">thm</span></span><span> </span><span>recover_proofs.godel_first_classic_strong</span><span>
 </span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* context Godel_Form_Minimal_Truth_Soundness_HBL1iff_Compl_Pf_Classical *)</span></span></span></span></span><span>
-</span><span>
-</span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span class="string"><span class="delete"><span class="delete">&quot;Godel_Form_Minimal_Truth_Soundness_HBL1iff_prv_Compl_Pf_Classical
-      var trm fmla Var FvarsT substT Fvars subst eql cnj imp all
-      exi fls dsj num prv bprv enc S isTrue P Pf&quot;</span></span></span><span>
-</span><span>  </span><span class="keyword1"><span class="command">using</span></span><span> </span><span class="delimiter">[</span><span class="delimiter">[</span><span>goals_limit</span><span class="delimiter">=</span><span>100</span><span class="delimiter">]</span><span class="delimiter">]</span><span>
-</span><span>  </span><span class="keyword1"><span class="command"><span class="improper"><span class="command">apply</span></span></span></span><span> </span><span>unfold_locales</span><span>
-</span><span>  </span><span class="keyword1"><span class="command">oops</span></span><span>
 </span><span>
 </span><span class="keyword2"><span class="keyword">end</span></span><span>
 </span></pre>

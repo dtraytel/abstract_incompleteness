@@ -60,7 +60,7 @@ lemma prv_\<phi>G_eqv:
  
 end \<comment> \<open>context Godel_Form\<close>
 
-locale Godel_Form_with_Proofs =  
+locale Godel_Form_Proofs =  
 Repr_Subst
   var trm fmla Var FvarsT substT Fvars subst
   num
@@ -94,12 +94,12 @@ and Pf
 
 locale Godel_Form_from_Proofs = Godel_Form
 
-sublocale Godel_Form_with_Proofs < Godel_Form_from_Proofs where P = P by standard
+sublocale Godel_Form_Proofs < Godel_Form_from_Proofs where P = P by standard
 (* Note: The proof goes instantly because at this point the system knows about 
 "sublocale Repr_Proofs < WRepr_Provability where P = P" *)
 
 
-context Godel_Form_with_Proofs 
+context Godel_Form_Proofs 
 begin
 
 lemma bprv_\<phi>G_eqv_not_exi_PPf: 
@@ -132,7 +132,7 @@ lemma prv_eqv_all_not_PPf_imp_\<phi>G:
 using bprv_prv[OF _ _ bprv_eqv_all_not_PPf_imp_\<phi>G, simplified] .
    
 
-end \<comment> \<open>context Godel_Form_with_Proofs\<close>
+end \<comment> \<open>context Godel_Form_Proofs\<close>
 
 
 

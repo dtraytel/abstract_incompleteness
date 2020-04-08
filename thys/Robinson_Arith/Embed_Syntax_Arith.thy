@@ -1416,7 +1416,7 @@ lemma LLq2[simp,intro!]:
 lemma Fvars_LLq[simp]: "t1 \<in> trm \<Longrightarrow> t2 \<in> trm \<Longrightarrow>
 Fvars (LLq t1 t2) = FvarsT t1 \<union> FvarsT t2"
 apply(auto simp: LLq_def Fvars_psubst) apply force
-using inj_Variable by blast
+  by (metis vars_distinct(1))
 
 (* This will be the working definition of LLq: *)
 lemma LLq_pls:
@@ -1514,7 +1514,7 @@ lemma LLs2[simp,intro!]:
 lemma Fvars_LLs[simp]: "t1 \<in> trm \<Longrightarrow> t2 \<in> trm \<Longrightarrow>
 Fvars (LLs t1 t2) = FvarsT t1 \<union> FvarsT t2"
 apply(auto simp: LLs_def Fvars_psubst) apply force
-using inj_Variable by blast
+  by (metis vars_distinct(1))
 
 (* This will be the working definition of LLs: *)
 lemma LLs_LLq:

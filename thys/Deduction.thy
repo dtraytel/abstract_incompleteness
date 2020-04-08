@@ -1965,6 +1965,28 @@ assumes
 (* Provability means there exists a proof (only needed for sentences) *)
 prv_prfOf: "\<And> \<phi>. \<phi> \<in> fmla \<Longrightarrow> Fvars \<phi> = {} \<Longrightarrow> prv \<phi> \<longleftrightarrow> (\<exists> prf \<in> proof. prfOf prf \<phi>)"
 
+(* Adding the renaming axioms for syntax: *)
+locale Deduct_with_False_Disj_Rename = 
+Deduct_with_False_Disj  
+  var trm fmla Var FvarsT substT Fvars subst
+  eql cnj imp all exi 
+  fls
+  dsj
+  num
+  prv
++
+Syntax_with_Connectives_Rename
+  var trm fmla Var FvarsT substT Fvars subst
+  eql cnj imp all exi 
+for 
+var :: "'var set" and trm :: "'trm set" and fmla :: "'fmla set" 
+and Var FvarsT substT Fvars subst  
+and eql cnj imp all exi 
+and fls
+and dsj
+and num
+and prv
+
 
 (* Working with two provability relations:
 provability prv and basic provability bprv  *)
@@ -2179,6 +2201,26 @@ shows "\<exists> P \<subseteq> num. finite P \<and> prv (dsj (sdsj {eql (Var yy)
 using assms Lq_num2 unfolding LLq_def by auto 
 
 end \<comment> \<open>context Deduct_with_PseudoOrder\<close>
+
+(* Variant where bprv = prv *)
+locale Deduct_with_PseudoOrder = 
+  Deduct2_with_PseudoOrder
+  var trm fmla Var FvarsT substT Fvars subst
+  eql cnj imp all exi 
+  fls
+  dsj
+  num
+  prv prv
+  Lq
+for 
+var :: "'var set" and trm :: "'trm set" and fmla :: "'fmla set" 
+and Var FvarsT substT Fvars subst  
+and eql cnj imp all exi 
+and fls
+and dsj
+and num
+and prv bprv 
+and Lq
 
 locale Deduct2_with_Proofs_PseudoOrder = 
 Deduct2_with_Proofs  

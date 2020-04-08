@@ -77,7 +77,7 @@ and we need representability of substitution and weak representability of provab
 </span><span> 
 </span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form&#8250;</span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Godel_Form_with_Proofs</span><span> </span><span class="delimiter">=</span><span>  
+</span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Godel_Form_Proofs</span><span> </span><span class="delimiter">=</span><span>  
 </span><span>Repr_Subst</span><span>
 </span><span>  </span><span>var</span><span> </span><span>trm</span><span> </span><span>fmla</span><span> </span><span>Var</span><span> </span><span>FvarsT</span><span> </span><span>substT</span><span> </span><span>Fvars</span><span> </span><span>subst</span><span>
 </span><span>  </span><span>num</span><span>
@@ -111,12 +111,12 @@ and we need representability of substitution and weak representability of provab
 </span><span>
 </span><span class="keyword1"><span class="command">locale</span></span><span> </span><span>Godel_Form_from_Proofs</span><span> </span><span class="delimiter">=</span><span> </span><span>Godel_Form</span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Godel_Form_with_Proofs</span><span> </span><span class="delimiter">&lt;</span><span> </span><span>Godel_Form_from_Proofs</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>P</span><span> </span><span class="delimiter">=</span><span> </span><span>P</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>standard</span><span>
+</span><span class="keyword1"><span class="command">sublocale</span></span><span> </span><span>Godel_Form_Proofs</span><span> </span><span class="delimiter">&lt;</span><span> </span><span>Godel_Form_from_Proofs</span><span> </span><span class="keyword2"><span class="keyword">where</span></span><span> </span><span>P</span><span> </span><span class="delimiter">=</span><span> </span><span>P</span><span> </span><span class="keyword1"><span class="command">by</span></span><span> </span><span>standard</span><span>
 </span><span class="comment"><span class="delete"><span class="delete"><span class="delete"><span class="delete">(* Note: The proof goes instantly because at this point the system knows about 
 &quot;sublocale Repr_Proofs &lt; WRepr_Provability where P = P&quot; *)</span></span></span></span></span><span>
 </span><span>
 </span><span>
-</span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Godel_Form_with_Proofs</span><span> 
+</span><span class="keyword1"><span class="command">context</span></span><span> </span><span>Godel_Form_Proofs</span><span> 
 </span><span class="keyword2"><span class="keyword">begin</span></span><span>
 </span><span>
 </span><span class="keyword1"><span class="command">lemma</span></span><span> </span><span>bprv_&#966;G_eqv_not_exi_PPf</span><span class="delimiter">:</span><span> 
@@ -149,7 +149,7 @@ and we need representability of substitution and weak representability of provab
 </span><span class="keyword1"><span class="command">using</span></span><span> </span><span>bprv_prv</span><span class="delimiter">[</span><span>OF</span><span> </span><span>_</span><span> </span><span>_</span><span> </span><span>bprv_eqv_all_not_PPf_imp_&#966;G</span><span class="delimiter">,</span><span> </span><span>simplified</span><span class="delimiter">]</span><span> </span><span class="keyword1"><span class="command">.</span></span><span>
 </span><span>   
 </span><span>
-</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form_with_Proofs&#8250;</span><span>
+</span><span class="keyword2"><span class="keyword">end</span></span><span> </span><span class="comment">&#8213; &#8249;context Godel_Form_Proofs&#8250;</span><span>
 </span><span>
 </span><span>
 </span><span>

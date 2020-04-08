@@ -1,5 +1,5 @@
 (* Embedding (intuitionistic) Robinson Arithmetic (Q) *)
-theory Embed_Q imports Embed_Syntax_Arith Natural_Deduction
+theory Embed_Q imports Embed_Syntax_Arith Abstract.Natural_Deduction
 begin  
 
 (* Factoring in a strict-order-like relation (not actually required to be an order): *)
